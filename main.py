@@ -1,5 +1,3 @@
-# Turret Defencee v8
-
 from Player import Turret
 from Enemies import Enemy,Boss
 from Banners import Banner,Prestige_banner
@@ -30,16 +28,19 @@ Note: higher difficulty levels may not run properly depending on cpu strength
 Difficulty = 3
 
 '''
-# Smaller number == more detail
-# Default: 25, Original: 50
-# Night mode:
-    # Min: 1
-    # Max: 14
-# Day mode:
-    # Min: 14
-    # Max: 350
+Smaller value == more detail
+
+Default: 25
+Original: 50
+
+Night mode:
+    Min: 1
+    Max: 14
+Day mode:
+    Min: 14
+    Max: 350
 '''
-background_detail = 2500
+background_detail = 25
 
 # Initialisations
 try:
