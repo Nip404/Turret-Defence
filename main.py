@@ -6,12 +6,6 @@ from Error import CustomException
 import pygame
 import sys
 
-#to do:
-
-#prestige banner + prestige
-#all powerups + counters (design + implement)
-#draw turret barrel
-
 # SETTINGS
 '''
 Difficulty (only affects speed of enemies):
