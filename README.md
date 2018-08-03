@@ -11,7 +11,7 @@ You can upgrade stats which will buff/nerf certain aspects of the game using mon
 The buttons on the banner will light up green is you can buy it, and a certain shade of red depending on how close it is to being maxed out.
 
 When you have maxed out all your upgrades, the prestige button will light up, and click it to reset all stats and make the game generally harder.\
-With each prestige comes a new powerup, which you can use on a cooldown timer./
+With each prestige comes a new powerup, which you can use on a cooldown timer.\
 The end goal is to unlock the 10th prestige, at which point you finish the game.
 
 # Prestige powerups:
