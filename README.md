@@ -1,4 +1,4 @@
-# Turret-Defense
+# Turret-Defence
 A turret based game in Python 3.x using the Pygame library.
 
 Note: All prestige content is still in-dev.
