@@ -1,3 +1,5 @@
+from Prestige_Buttons import Button0,Button1,Button2,Button3,Button4,Button5,Button6,Button7,Button8,Button9
+
 import pygame
 import math
 import time
@@ -25,7 +27,7 @@ class Banner:
                 "R Rate":{"rect":self.rect([285,200],self.buttonsize),"var":{"class":self.turret,"name":"regen_rate"},"effect":1,"used":0,"use limit":4,"money":500}
             },{
                 "Speed":{"rect":self.rect([105,260],self.buttonsize),"var":{"class":self.turret,"name":"bullet_speed"},"effect":2,"used":0,"use limit":5,"money":100},
-                "Size":{"rect":self.rect([165,260],self.buttonsize),"var":{"class":self.turret,"name":"bullet_sp "},"effect":2,"used":0,"use limit":5,"money":500},
+                "Size":{"rect":self.rect([165,260],self.buttonsize),"var":{"class":self.turret,"name":"bullet_size"},"effect":2,"used":0,"use limit":5,"money":500},
                 "Rounds":{"rect":self.rect([225,260],self.buttonsize),"var":{"class":self.turret,"name":"round_size"},"effect":5,"used":0,"use limit":5,"money":500}
             },{
                 "Size":{"rect":self.rect([105,320],self.buttonsize),"var":{"class":self.enemy,"name":"size"},"effect":4,"used":0,"use limit":5,"money":100},
@@ -53,7 +55,7 @@ class Banner:
         # Draws changed on banner
         self.update_graphics()
 
-    def click(self,mouse):
+    def click(self,mouse,enemies):
         # Looping through each section of buttons
         for panel in self.buttons:
             # Looping through each button in section
@@ -63,7 +65,13 @@ class Banner:
                 if self.rect(mouse,1).colliderect(button["rect"]) and button["used"] < button["use limit"] and self.turret.money >= button["money"] and not (name == "Regen" and button["var"]["class"].health >= button["var"]["class"].maxhealth):
 
                     # Updates the variable in the class to the variable + effect (essentially a += between classes)
-                    setattr(button["var"]["class"],button["var"]["name"],getattr(button["var"]["class"],button["var"]["name"])+button["effect"])
+                    
+                    try: # Special case for enemies, since they save their attributes in instances
+                        setattr(button["var"]["class"],button["var"]["name"],getattr(button["var"]["class"],button["var"]["name"])+button["effect"])
+                    except:
+                        for e in enemies:
+                            setattr(e,button["var"]["name"],getattr(e,button["var"]["name"])+button["effect"])
+
                     button["used"] += 1
                     self.turret.money -= button["money"]
                     self.turret.score += 100 * button["used"]
@@ -127,5 +135,43 @@ class Banner:
     def draw(self):
         self.surf.blit(self.banner,(self.startx,0))
 
-class Prestige_banner:
-    pass
+class Prestige_Banner:
+    def __init__(self,surf,font):
+        self.surf = surf
+        self.font = font
+        self.prestige = 8
+
+        self.prestige_banner = self.get_banner()
+        self.main_button = Button0(self.prestige_banner,self.font)
+        self.buttons = [Button1(),
+                        Button2(),
+                        Button3(),
+                        Button4(),
+                        Button5(),
+                        Button6(),
+                        Button7(),
+                        Button8(),
+                        Button9()]
+
+    def update(self,banner):
+        self.main_button.update(banner)
+
+        for i in self.buttons:
+            i.update()
+
+    def onClickMainButton(self,mouse,banner,player,enemies,boss):
+        self.prestige = self.main_button.onClick(mouse,banner,player,enemies,boss,self.prestige)
+
+    def draw(self):
+        self.main_button.draw()
+
+        for i in self.buttons:
+            i.draw()
+        
+        self.surf.blit(self.prestige_banner,(0,500))
+
+    def get_banner(self):
+        p = pygame.Surface([self.surf.get_width(),100])
+        p.fill((50,50,150))
+
+        return p
