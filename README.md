@@ -1,16 +1,21 @@
 # Turret-Defence
 A turret based game in Python 3.x using the Pygame library.
 
-Note: All prestige content is still in-dev.
+UPDATE: All prestige buttons are still in-dev. The prestige framework itself is now implemented.
 
 # How to play
 The game revolves around a single turret in the middle of a field.\
-To earn money and score points, click around the turret to shoot bullets. When your magasine is empty, press 'r' to reload.\
-Be aware of your magasines (you can see the amount on the banner on the right): if you run out and cannot afford any more, you lose.\
-You can upgrade stats which will buff/nerf certain aspects of the game using money.\
-The buttons on the banner will light up green is you can buy it, and a certain shade of red depending on how close it is to being maxed out.
+To earn money and score points, click around the turret to shoot bullets.\
+When your magasine is empty, press 'r' to reload.
 
-When you have maxed out all your upgrades, the prestige button will light up, and click it to reset all stats and make the game generally harder.\
+Be aware of your magasines (you can see the amount on the banner on the right),\
+as if you run out and cannot afford any more, you lose.
+
+You can upgrade stats which will buff/nerf certain aspects of the game using money.\
+The buttons on the banner will light up green is you can buy it,\
+and a certain shade of red depending on how close it is to being maxed out.
+
+When you have maxed out all your upgrades, the prestige button will light up, and click it to reset all stats to harder than before.\
 With each prestige comes a new powerup, which you can use on a cooldown timer.\
 The end goal is to unlock the 10th prestige, at which point you finish the game.
 
