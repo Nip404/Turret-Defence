@@ -36,7 +36,6 @@ The end goal is to unlock the 10th prestige, at which point you finish the game.
 - Draw turret barrel which follows mouse
 - Create prestige banner with functional prestige buttons
 - Design and implement working powerups which can integrate into existing classes
-- Create a prestige effect, where all stats are changed every prestige with a prestige function
 
 # Requirements
 I am using the [Python 3.7](https://www.python.org/downloads/release/python-370/) IDLE.\
