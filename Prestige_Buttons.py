@@ -39,28 +39,64 @@ class Button0:
         return prestige
 
 class Button1:
-    pass
+    def __init__(self):
+        pass
+
+    def draw(self):
+        pass
 
 class Button2:
-    pass
+    def __init__(self):
+        pass
+
+    def draw(self):
+        pass
 
 class Button3:
-    pass
+    def __init__(self):
+        pass
+
+    def draw(self):
+        pass
 
 class Button4:
-    pass
+    def __init__(self):
+        pass
+
+    def draw(self):
+        pass
 
 class Button5:
-    pass
+    def __init__(self):
+        pass
+
+    def draw(self):
+        pass
 
 class Button6:
-    pass
+    def __init__(self):
+        pass
+
+    def draw(self):
+        pass
 
 class Button7:
-    pass
+    def __init__(self):
+        pass
+
+    def draw(self):
+        pass
 
 class Button8:
-    pass
+    def __init__(self):
+        pass
+
+    def draw(self):
+        pass
 
 class Button9:
-    pass
+    def __init__(self):
+        pass
+
+    def draw(self):
+        pass
