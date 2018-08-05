@@ -139,7 +139,7 @@ class Prestige_Banner:
     def __init__(self,surf,font):
         self.surf = surf
         self.font = font
-        self.prestige = 8
+        self.prestige = 0
 
         self.prestige_banner = self.get_banner()
         self.main_button = Button0(self.prestige_banner,self.font)
@@ -155,10 +155,7 @@ class Prestige_Banner:
 
     def update(self,banner):
         self.main_button.update(banner)
-
-        for i in self.buttons:
-            i.update()
-
+        
     def onClickMainButton(self,mouse,banner,player,enemies,boss):
         self.prestige = self.main_button.onClick(mouse,banner,player,enemies,boss,self.prestige)
 
