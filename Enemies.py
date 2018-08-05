@@ -4,13 +4,13 @@ import random
 
 class Enemy:
     # Stats
-    basehealth = 100
-    speed = 2
-    size = 15
+    _basehealth = 100
+    _speed = 2
+    _size = 15
     spawnrate = 10
-    
+
     def __init__(self,surface,s):
-        self.health = self.basehealth
+        self.init_stats(prestige=0)
 
         # Movement data
         sector = random.randint(0,3)
@@ -21,6 +21,13 @@ class Enemy:
         self.surf = surface
         self.s = s
         self.rect = pygame.Rect(self.pos[0]-self.size,self.pos[1]-self.size,self.size*2,self.size*2)
+
+    def init_stats(self,prestige):
+        self.basehealth = self._basehealth + (10 * prestige)
+        self.health = self.basehealth
+
+        self.speed = self._speed + (0.5 * prestige)
+        self.size = self._size - prestige
 
     @staticmethod
     # Static method returns a unit vector
@@ -43,18 +50,21 @@ class Enemy:
 class Boss:
     def __init__(self,surface,s):
         # Stats
+        self.init_stats(0)
         self.alive = False
-        self.size = 25
-        self.speed = 1
-        self.basehealth = 500
-        self.health = self.basehealth
-        self.spawnrate = 100
         self.damaged = False # Appears darker when not damaged
 
         # Other
         self.surf = surface
         self.s = s
         self.rect = pygame.Rect(-1,-1,0,0)
+
+    def init_stats(self,prestige):
+        self.size = 25 - prestige
+        self.speed = 1 - (0.05 * prestige)
+        self.basehealth = 500 + (50 * prestige)
+        self.health = self.basehealth
+        self.spawnrate = 100
         
     def respawn(self,frame):
         # Resets main variables
