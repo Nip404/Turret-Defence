@@ -1,6 +1,6 @@
 from Player import Turret
 from Enemies import Enemy,Boss
-from Banners import Banner,Prestige_banner
+from Banners import Banner,Prestige_Banner
 from Error import CustomException
 
 import pygame
@@ -40,7 +40,7 @@ background_detail = 25
 try:
     fps = {1:15,2:40,3:60,4:80,5:100,6:120}[Difficulty]
 except KeyError as e:
-    print("Error: '%s' not found, Defaulting difficulty to level 3." % e)
+    print(f"Error: '{e}' not found, Defaulting difficulty to level 3.")
     fps = 60
 finally:
     size = [850,600] # Window Size
@@ -93,6 +93,7 @@ def main():
         boss = Boss(screen,s)
         frame = 1 # Causes an issue with boss spawn: 0 % anything = 0
         banner = Banner(screen,s,small,med,turret,Enemy,boss)
+        prestige_banner = Prestige_Banner(screen,small)
 
         paused = False
 
@@ -107,10 +108,12 @@ def main():
                     sys.exit()
 
                 elif event.type == pygame.MOUSEBUTTONDOWN:
+                    prestige_banner.onClickMainButton(pygame.mouse.get_pos(),banner,turret,enemies,boss)
+                    
                     # Checks if mouse is within banner pos, and updates money and score
                     if banner.rect(pygame.mouse.get_pos(),1).colliderect(pygame.Rect(s[0],0,banner.banner_res[0],banner.banner_res[1])):
                         # Changes mouse pos relative to banner pos
-                        banner.click([i-s[0] if not p % 2 else i for p,i in enumerate(pygame.mouse.get_pos())])
+                        banner.click([i-s[0] if not p % 2 else i for p,i in enumerate(pygame.mouse.get_pos())],enemies)
 
                     # If not clicking on banner and left clicked
                     elif event.button == 1:
@@ -125,8 +128,10 @@ def main():
                     elif event.key == pygame.K_ESCAPE:
                         paused = not paused
 
-            # Collision updates
+            # Updates
+            pygame.display.set_caption(f"Turret Defence v8 by NIP |||| Prestige: {prestige_banner.prestige}")
             enemies,boss = turret.collide(enemies,boss)
+            prestige_banner.update(banner)
 
             # Deletes bullets which are off-screen, and enemies with negative health
             turret.clean()
@@ -138,6 +143,7 @@ def main():
             banner.update(clock.get_fps())
             boss.draw()
             banner.draw()
+            prestige_banner.draw()
 
             for e in enemies:
                 e.draw()
