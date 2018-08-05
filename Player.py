@@ -18,7 +18,7 @@ class Bullet:
         self.pos = [self.pos[i] + (speed*self.vector[i]) for i in range(2)]
 
     def draw(self,surf):
-        pygame.draw.circle(surf,(255,255,0),list(map(int,self.pos)),self.size,0)
+        pygame.draw.circle(surf,(255,255,0),list(map(int,self.pos)),int(self.size),0)
         self.rect = pygame.Rect(self.pos[0]-self.size,self.pos[1]-self.size,self.size*2,self.size*2)
 
 class Turret:
@@ -29,25 +29,27 @@ class Turret:
         self.rect = pygame.Rect(self.s[0]/2-25,self.s[1]/2-25,50,50)
         self.bullets = []
         self.kills = 0
-        self.money = 10000
+        self.money = 10000000
         self.score = 0
 
-        # Stats
-        self.maxhealth = 100
+        self.init_stats(prestige=0)
+
+    def init_stats(self,prestige):
+        self.maxhealth = 100 - (5 * prestige)
         self.health = self.maxhealth
 
         self.regen_factor = 1
         self.regen_rate = 5
 
-        self.bullet_speed = 4
-        self.bullet_size = 4
-        self.damage = 25
-        self.round_size = 20
+        self.bullet_speed = 4 - (0.2 * prestige)
+        self.bullet_size = 4 - (0.2 * prestige)
+        self.damage = 25 - (2 * prestige)
+        self.round_size = 20 - prestige
         self.magasines = 14
         self.rounds = self.round_size
 
-        self.mag_cost = 100
-        self.profit = 10
+        self.mag_cost = 100 + (20 * prestige)
+        self.profit = 10 - (0.5 * prestige)
 
     def animate(self):
         for bullet in self.bullets:
@@ -79,9 +81,7 @@ class Turret:
                     self.score += self.profit
                     enemies[p].health -= self.damage
                     used_bullets.append(p2)
-
-                    print(i.health)
-
+                    
                     # If enemy is dead
                     if not i.health:
                         dead_enemies.append(p)
