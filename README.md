@@ -1,7 +1,7 @@
 # Turret-Defence
 A turret based game in Python 3.x using the Pygame library.
 
-UPDATE: All prestige buttons are still in-dev. The prestige framework itself is now implemented.
+UPDATE: Prestige buttons are halfway done, all but one prestige logos have to be made.
 
 # How to play
 The game revolves around a single turret in the middle of a field.\
@@ -24,8 +24,8 @@ The end goal is to unlock the 10th prestige, at which point you finish the game.
 - Prestige 1: Immunity for 10 seconds, cooldown 5 seconds
 - Prestige 2: Instant kills for 5 seconds, cooldown 20 seconds
 - Prestige 3: Auto-aim for 5 seconds, cooldown 10 seconds
-- Prestige 4: 2 free magasines and auto reload for 20 seconds, cooldown 10 seconds
-- Prestige 5: Doubled money gain for 5 seconds, cooldown 20 seconds
+- Prestige 4: 2 free magasines and free auto reload for 20 seconds, cooldown 10 seconds
+- Prestige 5: Doubled money and score gain for 5 seconds, cooldown 20 seconds
 - Prestige 6: Triple cannon for 5 seconds, cooldown 10 seconds
 - Prestige 7: Ability to fire 60 bullets at once around the circumference of the turret for 5 seconds, cooldown 20 seconds
 - Prestige 8: Slows time by half for 10 seconds, cooldown 20 seconds
