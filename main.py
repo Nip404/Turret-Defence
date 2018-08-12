@@ -10,7 +10,7 @@ import sys
 '''
 Difficulty (only affects speed of enemies):
 
-1 - playtest
+1 - very easy
 2 - easy
 3 - normal (Default)
 4 - hard
@@ -34,6 +34,7 @@ pygame.init()
 screen = pygame.display.set_mode(size,0,32)
 clock = pygame.time.Clock()
 pygame.display.set_caption("Turret Defence v8 by NIP")
+message = {1:"Very Easy (1)",2:"Easy (2)",3:"Normal (3)",4:"Hard (4)",5:"Very Hard (5)",6:"Impossible (6)"}[Difficulty]
 
 # Fonts
 big = pygame.font.SysFont("Garamond MS",60)
@@ -103,7 +104,7 @@ def main():
                         paused = not paused
                         
             # Updates
-            pygame.display.set_caption(f"Turret Defence v8 by NIP    ||||    Difficulty: {Difficulty}/6    ||||    Prestige: {prestige_banner.prestige}")
+            pygame.display.set_caption(f"Turret Defence v8 by NIP    ||||    Difficulty: {message}    ||||    Prestige: {prestige_banner.prestige}")
             enemies,boss = turret.collide(enemies,boss,prestige_banner.buttons[4].gold_rush,prestige_banner.buttons[1].instakill)
             prestige_banner.update()
 
@@ -191,8 +192,8 @@ def endscreen(turret,enemies,boss,banner,prestige_banner):
 
     # Similar to pause screen
     end = pygame.Surface(size)
-    end.set_alpha(150)
-    end.fill((255,0,0) if prestige_banner.prestige < 10 else (255,255,255))
+    end.set_alpha(100)
+    end.fill((255,0,0) if prestige_banner.prestige < 10 else (0,255,0)) 
 
     while True:
         # Event Handler
