@@ -21,38 +21,11 @@ Note: higher difficulty levels may not run properly depending on cpu strength
 '''
 Difficulty = 3
 
-'''
-Smaller value == more detail
-
-Default: 25
-Original: 50
-Best looking: 2
-
-Night mode:
-    Min: 2
-    Max: 14
-Day mode:
-    Min: 15
-    Max: 350
-'''
-background_detail = 2
-
 # Initialisations
 try:
     fps = {1:15,2:40,3:60,4:80,5:100,6:120}[Difficulty]
 except KeyError as e:
-    print(f"Error: '{e}' not found, Defaulting difficulty to level 3.")
-    fps = 60
-
-try:
-    if 1 < background_detail < 15:
-        night_mode = True
-    elif 15 <= background_detail <= 350:
-        night_mode = False
-    else:
-        raise CustomException("Error: Number is out of bounds. Please change 'background_detail' within acceptable range.")
-except TypeError as e:
-    raise CustomException(f"Error: '{e}'. Please enter an integer.")
+    raise CustomException(f"Error: '{e}'. Please pick a valid option from 1-6.")
 
 size = [850,600] # Window Size
 s = [500,500] # Playable screen size
@@ -69,7 +42,7 @@ small = pygame.font.SysFont("Garamond MS",18)
 
 def background():
     # Draws green circles on background backwards (from big to small)
-    for p,i in enumerate(reversed(range(50,401,background_detail))):
+    for p,i in enumerate(reversed(range(50,401,2))):
         pygame.draw.circle(screen,(0,(p*1.4 if night_mode else 130+(p*5)),0),[int(i/2) for i in s],i,0) 
 
 #Pause Screen is blitted over main surface
