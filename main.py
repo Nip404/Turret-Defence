@@ -43,7 +43,7 @@ small = pygame.font.SysFont("Garamond MS",18)
 def background():
     # Draws green circles on background backwards (from big to small)
     for p,i in enumerate(reversed(range(50,401,2))):
-        pygame.draw.circle(screen,(0,(p*1.4 if night_mode else 130+(p*5)),0),[int(i/2) for i in s],i,0) 
+        pygame.draw.circle(screen,(0,p*1.4,0),[int(i/2) for i in s],i,0) 
 
 #Pause Screen is blitted over main surface
 def get_pause_screen():
