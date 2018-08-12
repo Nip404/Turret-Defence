@@ -125,7 +125,8 @@ class Banner:
         # Coloured tags
         for p,i in enumerate([self.font.render("Player:",True,(0,0,0)),self.font.render("Bullets:",True,(255,200,0)),self.font.render("Enemies:",True,(255,0,0)),self.font.render("Bosses:",True,(0,0,255)),self.font.render("Supplies:",True,(0,255,0))]):
             self.banner.blit(i,i.get_rect(topright=[60,165+([1,3,5,7,9][p]*30)]))
-                  
+
+    # Initial banner
     def get_banner(self,resolution):
         b = pygame.Surface(resolution)
         b.fill((255,255,255))
@@ -136,29 +137,41 @@ class Banner:
         self.surf.blit(self.banner,(self.startx,0))
 
 class Prestige_Banner:
-    def __init__(self,surf,font):
+    def __init__(self,surf,font,player):
         self.surf = surf
         self.font = font
         self.prestige = 0
 
         self.prestige_banner = self.get_banner()
-        self.main_button = Button0(self.prestige_banner,self.font)
-        self.buttons = [Button1(),
-                        Button2(),
-                        Button3(),
-                        Button4(),
-                        Button5(),
-                        Button6(),
-                        Button7(),
-                        Button8(),
-                        Button9()]
+        self.main_button = Button0(self.prestige_banner,self.font) # All buttons
+        self.buttons = [Button1(self.prestige_banner,player),
+                        Button2(self.prestige_banner,player),
+                        Button3(self.prestige_banner),
+                        Button4(self.prestige_banner,player),
+                        Button5(self.prestige_banner),
+                        Button6(self.prestige_banner),
+                        Button7(self.prestige_banner),
+                        Button8(self.prestige_banner),
+                        Button9(self.prestige_banner)]
 
+    # Updates individual timers
     def update(self,banner):
         self.main_button.update(banner)
-        
-    def onClickMainButton(self,mouse,banner,player,enemies,boss):
+
+        for i in self.buttons:
+            i.update()
+
+    # Button interaction and prestige updates
+    def onClick(self,mouse,banner,player,enemies,boss):
+        old = self.prestige
         self.prestige = self.main_button.onClick(mouse,banner,player,enemies,boss,self.prestige)
 
+        if old < self.prestige and not self.prestige == 10:
+            self.buttons[old].unlock = True
+
+        for i in self.buttons:
+            i.onClick(mouse)
+            
     def draw(self):
         self.main_button.draw()
 
