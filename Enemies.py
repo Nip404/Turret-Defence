@@ -37,7 +37,7 @@ class Enemy:
     def draw(self):
         pygame.draw.circle(self.surf,(200,0,0),list(map(int,self.pos)),self.size,0)
         pygame.draw.rect(self.surf,(255,0,0),list(map(int,(self.pos[0]-25,self.pos[1]-25,50,10))),0)
-        pygame.draw.rect(self.surf,(0,255,0),list(map(int,(self.pos[0]-25,self.pos[1]-25,50*(self.health/self.basehealth),10))),0)
+        pygame.draw.rect(self.surf,(0,255,0),list(map(int,(self.pos[0]-25,self.pos[1]-25,50*(self.health/self.basehealth) if 50*(self.health/self.basehealth) <= 50 else 50,10))),0)
 
     def spawn(self,enemies,frame,fps,boss):
         # Returns original list if it is not the correct time, otherwise returns list with appended enemy
@@ -61,7 +61,7 @@ class Boss:
 
     def init_stats(self,prestige):
         self.size = 25 - prestige
-        self.speed = 1 - (0.05 * prestige)
+        self.speed = 1 + (0.05 * prestige)
         self.basehealth = 500 + (50 * prestige)
         self.health = self.basehealth
         self.spawnrate = 100
@@ -82,7 +82,7 @@ class Boss:
         
         pygame.draw.circle(self.surf,((100,100,0) if not self.damaged else (200,0,0)),list(map(int,self.pos)),self.size,0)
         pygame.draw.rect(self.surf,(255,0,0),(self.pos[0]-25,self.pos[1]-40,50,10),0)
-        pygame.draw.rect(self.surf,(0,255,0),(self.pos[0]-25,self.pos[1]-40,50 * (self.health/self.basehealth),10),0)
+        pygame.draw.rect(self.surf,(0,255,0),(self.pos[0]-25,self.pos[1]-40,50*(self.health/self.basehealth) if 50 * (self.health/self.basehealth) <= 50 else 50,10),0)
 
     def animate(self):
         if not self.alive:
