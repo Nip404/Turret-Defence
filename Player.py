@@ -2,7 +2,7 @@ import pygame
 import math
 
 class Bullet:
-    def __init__(self,mouse,s,size):
+    def __init__(self,mouse,s,size): # Mouse pos, destination, screensize, bullet size
         self.vector = self.normalise([mouse[i] - [i/2 for i in s][i] for i in range(2)])
         self.pos = [i/2 for i in s]
         self.size = size
@@ -29,7 +29,7 @@ class Turret:
         self.rect = pygame.Rect(self.s[0]/2-25,self.s[1]/2-25,50,50)
         self.bullets = []
         self.kills = 0
-        self.money = 10000000
+        self.money = 0
         self.score = 0
 
         self.init_stats(prestige=0)
@@ -55,7 +55,7 @@ class Turret:
         for bullet in self.bullets:
             bullet.animate(self.bullet_speed)
 
-    def collide(self,enemies,boss):
+    def collide(self,enemies,boss,gold_rush):
         # Checks for overflow
         if self.health > self.maxhealth:
             self.health = self.maxhealth
@@ -63,6 +63,10 @@ class Turret:
         # Used because deleting items whilst looping in for loop disrupts indexing method
         dead_enemies = []
         used_bullets = []
+
+        # If button ability activated: double profit for duration
+        old = self.profit
+        self.profit *= 2 if gold_rush else 1
 
         # Tracks location in enemy list (p) and enemy object (i)
         for p,i in enumerate(enemies):
@@ -111,17 +115,26 @@ class Turret:
             boss.alive = False
             self.score += 5 * self.profit
 
+        # Resets profit
+        self.profit = old
+
         # Removes used bullets and dead enemies with updated money and score
         self.bullets = [i for p,i in enumerate(self.bullets) if not p in used_bullets]
         return [i for p,i in enumerate(enemies) if not p in dead_enemies],boss
 
-    def shoot(self,mouse):
+    def shoot(self,mouse,targeted,enemies): # If auto-aim ability is on, shoot at nearest enemy
         # Dosen't shoot if rounds are empty or mouse in clicking on turret or mouse is outside playable area
         if not self.rounds or pygame.Rect(mouse[0]-1,mouse[1]-1,2,2).colliderect(self.rect) or not all(0 <= i <= self.s[p] for p,i in enumerate(mouse)):
             return
 
-        # New bullet
-        self.bullets.append(Bullet(mouse,self.s,self.bullet_size))
+        if targeted and len(enemies):
+            # Calculates nearest enemy from turret
+            distances = [math.sqrt(((self.s[0]/2-e.pos[0])**2)+((self.s[1]/2-e.pos[1])**2)) for e in enemies]
+            self.bullets.append(Bullet(enemies[distances.index(max(distances))].pos,self.s,self.bullet_size))
+        else:
+            # New bullet
+            self.bullets.append(Bullet(mouse,self.s,self.bullet_size))
+            
         self.rounds -= 1
 
     def reload(self):
