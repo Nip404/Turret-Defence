@@ -9,8 +9,8 @@ class Enemy:
     _size = 15
     spawnrate = 10
 
-    def __init__(self,surface,s):
-        self.init_stats(prestige=0)
+    def __init__(self,surface,s,prestige=0):
+        self.init_stats(prestige)
 
         # Movement data
         sector = random.randint(0,3)
@@ -39,9 +39,9 @@ class Enemy:
         pygame.draw.rect(self.surf,(255,0,0),list(map(int,(self.pos[0]-25,self.pos[1]-25,50,10))),0)
         pygame.draw.rect(self.surf,(0,255,0),list(map(int,(self.pos[0]-25,self.pos[1]-25,50*(self.health/self.basehealth) if 50*(self.health/self.basehealth) <= 50 else 50,10))),0)
 
-    def spawn(self,enemies,frame,fps,boss):
+    def spawn(self,enemies,frame,fps,boss,prestige):
         # Returns original list if it is not the correct time, otherwise returns list with appended enemy
-        return enemies + [Enemy(self.surf,self.s)] if not frame % (6*self.spawnrate) else enemies
+        return enemies + [Enemy(self.surf,self.s,prestige)] if not frame % (6*self.spawnrate) else enemies
 
     def animate(self):
         self.pos = [self.pos[i] + (self.speed*self.vector[i]) for i in range(2)]
@@ -51,7 +51,7 @@ class Boss:
     def __init__(self,surface,s):
         # Stats
         self.init_stats(0)
-        self.alive = False
+        self.alive = False # Boss switches between 2 states, so no new instances created
         self.damaged = False # Appears darker when not damaged
 
         # Other
