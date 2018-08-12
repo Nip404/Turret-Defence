@@ -29,7 +29,7 @@ The end goal is to unlock the 10th prestige, at which point you finish the game.
 - Prestige 6: Triple cannon for 5 seconds, cooldown 10 seconds
 - Prestige 7: Sprays 3 waves of bullets around the circumference of the turret for 5 seconds, cooldown 25 seconds
 - Prestige 8: Slows time by half for 10 seconds, cooldown 20 seconds
-- Prestige 9: No-click shooting (hold left-click) for 10 seconds, cooldown 10 seconds
+- Prestige 9: No-click shooting (hold left-click), and no ammo used for 10 seconds, cooldown 10 seconds
 - Prestige 10: Win
 
 # To-do list
