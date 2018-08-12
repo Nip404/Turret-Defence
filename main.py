@@ -192,7 +192,7 @@ def endscreen(turret,enemies,boss,banner,prestige_banner):
     # Similar to pause screen
     end = pygame.Surface(size)
     end.set_alpha(150)
-    end.fill((255,0,0)) if prestige_banner.prestige < 10 else (255,255,255)
+    end.fill((255,0,0) if prestige_banner.prestige < 10 else (255,255,255))
 
     while True:
         # Event Handler
