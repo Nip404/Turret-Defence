@@ -8,10 +8,14 @@ class Bullet:
         self.size = size
         self.rect = pygame.Rect(self.pos[0]-self.size,self.pos[1]-self.size,self.size*2,self.size*2)
 
-    @staticmethod
     # Static method returns a unit vector
+    @staticmethod
     def normalise(vector):
         return [i/math.sqrt(sum(i**2 for i in vector)) for i in vector]
+
+    @staticmethod
+    def rotate(vector,theta):
+        return [(vector[0]*math.cos(math.radians(theta)))-(vector[1]*math.sin(math.radians(theta))),(vector[0]*math.sin(math.radians(theta)))+(vector[1]*math.cos(math.radians(theta)))]
 
     def animate(self,speed=4):
         # Adds vector to current pos
@@ -35,6 +39,7 @@ class Turret:
         self.init_stats(prestige=0)
 
     def init_stats(self,prestige):
+        # Initialises stats according to prestige
         self.maxhealth = 100 - (5 * prestige)
         self.health = self.maxhealth
 
@@ -55,7 +60,7 @@ class Turret:
         for bullet in self.bullets:
             bullet.animate(self.bullet_speed)
 
-    def collide(self,enemies,boss,gold_rush):
+    def collide(self,enemies,boss,gold_rush,instakill):
         # Checks for overflow
         if self.health > self.maxhealth:
             self.health = self.maxhealth
@@ -65,8 +70,12 @@ class Turret:
         used_bullets = []
 
         # If button ability activated: double profit for duration
-        old = self.profit
+        # Similarly: Instant kills
+        old_profit = self.profit
         self.profit *= 2 if gold_rush else 1
+
+        old_damage = self.damage
+        self.damage = self.damage if not instakill else 1000
 
         # Tracks location in enemy list (p) and enemy object (i)
         for p,i in enumerate(enemies):
@@ -115,27 +124,37 @@ class Turret:
             boss.alive = False
             self.score += 5 * self.profit
 
-        # Resets profit
-        self.profit = old
+        # Resets ability activated stats
+        self.profit = old_profit
+        self.damage = old_damage
 
         # Removes used bullets and dead enemies with updated money and score
         self.bullets = [i for p,i in enumerate(self.bullets) if not p in used_bullets]
         return [i for p,i in enumerate(enemies) if not p in dead_enemies],boss
 
-    def shoot(self,mouse,targeted,enemies): # If auto-aim ability is on, shoot at nearest enemy
+    def shoot(self,mouse,enemies=[],targeted=False,shotgun=False,auto=False): # If auto-aim ability is on, shoot at nearest enemy
         # Dosen't shoot if rounds are empty or mouse in clicking on turret or mouse is outside playable area
-        if not self.rounds or pygame.Rect(mouse[0]-1,mouse[1]-1,2,2).colliderect(self.rect) or not all(0 <= i <= self.s[p] for p,i in enumerate(mouse)):
+        if not self.rounds or pygame.Rect(mouse[0]-1,mouse[1]-1,2,2).colliderect(self.rect) or not all(0 <= i <= self.s[p] for p,i in enumerate(mouse)) or auto:
             return
 
         if targeted and len(enemies):
             # Calculates nearest enemy from turret
             distances = [math.sqrt(((self.s[0]/2-e.pos[0])**2)+((self.s[1]/2-e.pos[1])**2)) for e in enemies]
-            self.bullets.append(Bullet(enemies[distances.index(max(distances))].pos,self.s,self.bullet_size))
+            bullet_pos = enemies[distances.index(max(distances))].pos
+
         else:
             # New bullet
-            self.bullets.append(Bullet(mouse,self.s,self.bullet_size))
-            
+            bullet_pos = mouse
+
+        self.bullets.append(Bullet(bullet_pos,self.s,self.bullet_size))
         self.rounds -= 1
+
+        if shotgun:
+            a,b = Bullet(bullet_pos,self.s,self.bullet_size),Bullet(bullet_pos,self.s,self.bullet_size)
+            a.vector = Bullet.normalise(Bullet.rotate(a.vector,10))
+            b.vector = Bullet.normalise(Bullet.rotate(b.vector,-10))
+
+            self.bullets += [a,b]
 
     def reload(self):
         # Must empty clip before reloading, and must have a magasine available or be able to afford one
@@ -164,7 +183,7 @@ class Turret:
 
         # Turret barrel
         pass
-        
+    
         # Bullets
         for bullet in self.bullets:
             bullet.draw(self.surf)
