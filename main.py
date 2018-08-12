@@ -26,15 +26,16 @@ Smaller value == more detail
 
 Default: 25
 Original: 50
+Best looking: 2
 
 Night mode:
-    Min: 1
+    Min: 2
     Max: 14
 Day mode:
-    Min: 14
+    Min: 15
     Max: 350
 '''
-background_detail = 25
+background_detail = 2
 
 # Initialisations
 try:
@@ -42,26 +43,29 @@ try:
 except KeyError as e:
     print(f"Error: '{e}' not found, Defaulting difficulty to level 3.")
     fps = 60
-finally:
-    size = [850,600] # Window Size
-    s = [500,500] # Playable screen size
-    
-    pygame.init()
-    screen = pygame.display.set_mode(size,0,32)
-    clock = pygame.time.Clock()
-    pygame.display.set_caption("Turret Defence v8 by NIP")
 
-    # Fonts
-    big = pygame.font.SysFont("Garamond MS",60)
-    med = pygame.font.SysFont("Garamond MS",40)
-    small = pygame.font.SysFont("Garamond MS",18)
-
-    if 0 < background_detail < 15:
+try:
+    if 1 < background_detail < 15:
         night_mode = True
     elif 15 <= background_detail <= 350:
         night_mode = False
     else:
-        raise CustomException("Error: Number is out of bounds. Please change 'background_detail'")
+        raise CustomException("Error: Number is out of bounds. Please change 'background_detail' within acceptable range.")
+except TypeError as e:
+    raise CustomException(f"Error: '{e}'. Please enter an integer.")
+
+size = [850,600] # Window Size
+s = [500,500] # Playable screen size
+    
+pygame.init()
+screen = pygame.display.set_mode(size,0,32)
+clock = pygame.time.Clock()
+pygame.display.set_caption("Turret Defence v8 by NIP")
+
+# Fonts
+big = pygame.font.SysFont("Garamond MS",60)
+med = pygame.font.SysFont("Garamond MS",40)
+small = pygame.font.SysFont("Garamond MS",18)
 
 def background():
     # Draws green circles on background backwards (from big to small)
@@ -93,7 +97,7 @@ def main():
         boss = Boss(screen,s)
         frame = 1 # Causes an issue with boss spawn: 0 % anything = 0
         banner = Banner(screen,s,small,med,turret,Enemy,boss)
-        prestige_banner = Prestige_Banner(screen,small)
+        prestige_banner = Prestige_Banner(screen,small,turret)
 
         paused = False
 
@@ -108,7 +112,7 @@ def main():
                     sys.exit()
 
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    prestige_banner.onClickMainButton(pygame.mouse.get_pos(),banner,turret,enemies,boss)
+                    prestige_banner.onClick([pygame.mouse.get_pos()[0],pygame.mouse.get_pos()[1]-500],banner,turret,enemies,boss)
                     
                     # Checks if mouse is within banner pos, and updates money and score
                     if banner.rect(pygame.mouse.get_pos(),1).colliderect(pygame.Rect(s[0],0,banner.banner_res[0],banner.banner_res[1])):
@@ -116,8 +120,8 @@ def main():
                         banner.click([i-s[0] if not p % 2 else i for p,i in enumerate(pygame.mouse.get_pos())],enemies)
 
                     # If not clicking on banner and left clicked
-                    elif event.button == 1:
-                        turret.shoot(pygame.mouse.get_pos())
+                    elif event.button == 1 and not paused:
+                        turret.shoot(pygame.mouse.get_pos(),prestige_banner.buttons[2].targeted,enemies)
 
                 elif event.type == pygame.KEYDOWN:
                     # Refills rounds (conditions are verified in function)
@@ -130,7 +134,7 @@ def main():
 
             # Updates
             pygame.display.set_caption(f"Turret Defence v8 by NIP |||| Prestige: {prestige_banner.prestige}")
-            enemies,boss = turret.collide(enemies,boss)
+            enemies,boss = turret.collide(enemies,boss,prestige_banner.buttons[4].gold_rush)
             prestige_banner.update(banner)
 
             # Deletes bullets which are off-screen, and enemies with negative health
@@ -170,10 +174,10 @@ def main():
             pygame.display.flip()
 
             # If game has ended
-            if turret.check_end():
+            if turret.check_end() or prestige_banner.prestige >= 10:
                 break
 
-        endscreen(turret,enemies,boss,banner)
+        endscreen(turret,enemies,boss,banner,prestige_banner)
 
 def startscreen():
     head = big.render("Turret Defence v8",True,(0,0,0))
@@ -210,7 +214,7 @@ def startscreen():
 
         pygame.display.flip()
 
-def endscreen(turret,enemies,boss,banner):
+def endscreen(turret,enemies,boss,banner,prestige_banner):
     head = big.render("Final Score: %d" % turret.score,True,(0,0,0))
     head2 = big.render("%d kills" % turret.kills,True,(0,0,0))
     foot = med.render("Press Space to play again",True,(0,0,0))
@@ -235,6 +239,7 @@ def endscreen(turret,enemies,boss,banner):
         turret.draw()
         boss.draw()
         banner.draw()
+        prestige_banner.draw()
 
         for i in enemies:
             i.draw()
