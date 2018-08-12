@@ -20,6 +20,7 @@ class Banner:
         self.enemy = enemy
         self.boss = boss
 
+        # Upgrades on banner
         self.buttons = [{
                 "Health":{"rect":self.rect([105,200],self.buttonsize),"var":{"class":self.turret,"name":"maxhealth"},"effect":25,"used":0,"use limit":5,"money":300},
                 "Damage":{"rect":self.rect([165,200],self.buttonsize),"var":{"class":self.turret,"name":"damage"},"effect":25,"used":0,"use limit":5,"money":200},
@@ -137,34 +138,34 @@ class Banner:
         self.surf.blit(self.banner,(self.startx,0))
 
 class Prestige_Banner:
-    def __init__(self,surf,font,player):
+    def __init__(self,surf,font,player,banner,s):
         self.surf = surf
         self.font = font
-        self.prestige = 0
+        self.prestige = 0 # Main prestige tracker
 
         self.prestige_banner = self.get_banner()
-        self.main_button = Button0(self.prestige_banner,self.font) # All buttons
+        self.main_button = Button0(banner,self.prestige_banner,self.font) # All buttons
         self.buttons = [Button1(self.prestige_banner,player),
                         Button2(self.prestige_banner,player),
                         Button3(self.prestige_banner),
                         Button4(self.prestige_banner,player),
                         Button5(self.prestige_banner),
                         Button6(self.prestige_banner),
-                        Button7(self.prestige_banner),
+                        Button7(self.prestige_banner,player,s),
                         Button8(self.prestige_banner),
-                        Button9(self.prestige_banner)]
+                        Button9(self.prestige_banner,player,s)]
 
-    # Updates individual timers
-    def update(self,banner):
-        self.main_button.update(banner)
+    # Updates individual timers and prestige availablity
+    def update(self):
+        self.main_button.update()
 
         for i in self.buttons:
             i.update()
 
     # Button interaction and prestige updates
-    def onClick(self,mouse,banner,player,enemies,boss):
+    def onClick(self,mouse,player,enemies,boss):
         old = self.prestige
-        self.prestige = self.main_button.onClick(mouse,banner,player,enemies,boss,self.prestige)
+        self.prestige = self.main_button.onClick(mouse,player,enemies,boss,self.prestige)
 
         if old < self.prestige and not self.prestige == 10:
             self.buttons[old].unlock = True
@@ -173,6 +174,7 @@ class Prestige_Banner:
             i.onClick(mouse)
             
     def draw(self):
+        # Draws each button and then blits updated banner
         self.main_button.draw()
 
         for i in self.buttons:
