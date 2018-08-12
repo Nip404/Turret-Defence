@@ -97,13 +97,13 @@ def main():
         boss = Boss(screen,s)
         frame = 1 # Causes an issue with boss spawn: 0 % anything = 0
         banner = Banner(screen,s,small,med,turret,Enemy,boss)
-        prestige_banner = Prestige_Banner(screen,small,turret)
+        prestige_banner = Prestige_Banner(screen,small,turret,banner,s)
 
         paused = False
 
         # Main Game Loop
         while True:
-            clock.tick(fps)
+            clock.tick(fps if not prestige_banner.buttons[7].slowmo else int(fps/2)) 
 
             # Main event handler
             for event in pygame.event.get():
@@ -112,16 +112,13 @@ def main():
                     sys.exit()
 
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    prestige_banner.onClick([pygame.mouse.get_pos()[0],pygame.mouse.get_pos()[1]-500],banner,turret,enemies,boss)
+                    # Changes mouse pos relative to banner pos
+                    prestige_banner.onClick([i-s[1] if p % 2 else i for p,i in enumerate(pygame.mouse.get_pos())],turret,enemies,boss)
+                    banner.click([i-s[0] if not p % 2 else i for p,i in enumerate(pygame.mouse.get_pos())],enemies)
                     
-                    # Checks if mouse is within banner pos, and updates money and score
-                    if banner.rect(pygame.mouse.get_pos(),1).colliderect(pygame.Rect(s[0],0,banner.banner_res[0],banner.banner_res[1])):
-                        # Changes mouse pos relative to banner pos
-                        banner.click([i-s[0] if not p % 2 else i for p,i in enumerate(pygame.mouse.get_pos())],enemies)
-
                     # If not clicking on banner and left clicked
-                    elif event.button == 1 and not paused:
-                        turret.shoot(pygame.mouse.get_pos(),prestige_banner.buttons[2].targeted,enemies)
+                    if event.button == 1 and not paused:
+                        turret.shoot(pygame.mouse.get_pos(),enemies,prestige_banner.buttons[2].targeted,prestige_banner.buttons[5].shotgun,prestige_banner.buttons[8].auto)
 
                 elif event.type == pygame.KEYDOWN:
                     # Refills rounds (conditions are verified in function)
@@ -131,11 +128,11 @@ def main():
                     # Toggles pause screen
                     elif event.key == pygame.K_ESCAPE:
                         paused = not paused
-
+                        
             # Updates
             pygame.display.set_caption(f"Turret Defence v8 by NIP |||| Prestige: {prestige_banner.prestige}")
-            enemies,boss = turret.collide(enemies,boss,prestige_banner.buttons[4].gold_rush)
-            prestige_banner.update(banner)
+            enemies,boss = turret.collide(enemies,boss,prestige_banner.buttons[4].gold_rush,prestige_banner.buttons[1].instakill)
+            prestige_banner.update()
 
             # Deletes bullets which are off-screen, and enemies with negative health
             turret.clean()
@@ -161,7 +158,7 @@ def main():
 
                 # Enemies only spawn when boss is dead
                 if not boss.alive:
-                    enemies = Enemy(screen,s).spawn(enemies,frame,fps,boss)
+                    enemies = Enemy(screen,s).spawn(enemies,frame,fps,boss,prestige_banner.prestige)
                     
                 boss.respawn(frame)        
                 turret.regen(frame,fps)
