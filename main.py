@@ -103,7 +103,7 @@ def main():
                         paused = not paused
                         
             # Updates
-            pygame.display.set_caption(f"Turret Defence v8 by NIP |||| Prestige: {prestige_banner.prestige}")
+            pygame.display.set_caption(f"Turret Defence v8 by NIP    ||||    Difficulty: {Difficulty}/6    ||||    Prestige: {prestige_banner.prestige}")
             enemies,boss = turret.collide(enemies,boss,prestige_banner.buttons[4].gold_rush,prestige_banner.buttons[1].instakill)
             prestige_banner.update()
 
@@ -186,13 +186,13 @@ def startscreen():
 
 def endscreen(turret,enemies,boss,banner,prestige_banner):
     head = big.render("Final Score: %d" % turret.score,True,(0,0,0))
-    head2 = big.render("%d kills" % turret.kills,True,(0,0,0))
+    head2 = big.render("%d kills" % turret.kills if prestige_banner.prestige < 10 else "YOU WON!",True,(0,0,0))
     foot = med.render("Press Space to play again",True,(0,0,0))
 
     # Similar to pause screen
     end = pygame.Surface(size)
     end.set_alpha(150)
-    end.fill((255,0,0))
+    end.fill((255,0,0)) if prestige_banner.prestige < 10 else (255,255,255)
 
     while True:
         # Event Handler
