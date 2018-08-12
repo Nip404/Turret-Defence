@@ -84,8 +84,8 @@ class Button1:
             colour = None
 
         if colour is not None:
-            cover = pygame.Surface([50,50],pygame.SRCALPHA,32)
-            pygame.draw.circle(cover,(*colour,150),(25,25),25,0)
+            cover = pygame.Surface([60,60],pygame.SRCALPHA,32)
+            pygame.draw.circle(cover,(*colour,150),(30,30),30,0)
             self.surf.blit(cover,cover.get_rect(center=self.pos))
 
         pygame.draw.circle(self.surf,(0,0,0),self.pos,self.radius,5)
@@ -131,8 +131,8 @@ class Button2:
             colour = None
 
         if colour is not None:
-            cover = pygame.Surface([50,50],pygame.SRCALPHA,32)
-            pygame.draw.circle(cover,(*colour,150),(25,25),25,0)
+            cover = pygame.Surface([60,60],pygame.SRCALPHA,32)
+            pygame.draw.circle(cover,(*colour,150),(30,30),30,0)
             self.surf.blit(cover,cover.get_rect(center=self.pos))
 
         pygame.draw.circle(self.surf,(0,0,0),self.pos,self.radius,5)
@@ -176,8 +176,8 @@ class Button3:
             colour = None
 
         if colour is not None:
-            cover = pygame.Surface([50,50],pygame.SRCALPHA,32)
-            pygame.draw.circle(cover,(*colour,150),(25,25),25,0)
+            cover = pygame.Surface([60,60],pygame.SRCALPHA,32)
+            pygame.draw.circle(cover,(*colour,150),(30,30),30,0)
             self.surf.blit(cover,cover.get_rect(center=self.pos))
 
         pygame.draw.circle(self.surf,(0,0,0),self.pos,self.radius,5)
@@ -229,8 +229,8 @@ class Button4:
             colour = None
 
         if colour is not None:
-            cover = pygame.Surface([50,50],pygame.SRCALPHA,32)
-            pygame.draw.circle(cover,(*colour,150),(25,25),25,0)
+            cover = pygame.Surface([60,60],pygame.SRCALPHA,32)
+            pygame.draw.circle(cover,(*colour,150),(30,30),30,0)
             self.surf.blit(cover,cover.get_rect(center=self.pos))
 
         pygame.draw.circle(self.surf,(0,0,0),self.pos,self.radius,5)
@@ -275,8 +275,8 @@ class Button5:
             colour = None
 
         if colour is not None:
-            cover = pygame.Surface([50,50],pygame.SRCALPHA,32)
-            pygame.draw.circle(cover,(*colour,150),(25,25),25,0)
+            cover = pygame.Surface([60,60],pygame.SRCALPHA,32)
+            pygame.draw.circle(cover,(*colour,150),(30,30),30,0)
             self.surf.blit(cover,cover.get_rect(center=self.pos))
 
         pygame.draw.circle(self.surf,(0,0,0),self.pos,self.radius,5)
@@ -324,8 +324,8 @@ class Button6: # Triple cannon for 5 seconds, cooldown 10
             colour = None
 
         if colour is not None:
-            cover = pygame.Surface([50,50],pygame.SRCALPHA,32)
-            pygame.draw.circle(cover,(*colour,150),(25,25),25,0)
+            cover = pygame.Surface([60,60],pygame.SRCALPHA,32)
+            pygame.draw.circle(cover,(*colour,150),(30,30),30,0)
             self.surf.blit(cover,cover.get_rect(center=self.pos))
 
         pygame.draw.circle(self.surf,(0,0,0),self.pos,self.radius,5)
@@ -369,8 +369,8 @@ class Button7: # Ability to fire 60 bullets at once around the circumference of 
             colour = None
 
         if colour is not None:
-            cover = pygame.Surface([50,50],pygame.SRCALPHA,32)
-            pygame.draw.circle(cover,(*colour,150),(25,25),25,0)
+            cover = pygame.Surface([60,60],pygame.SRCALPHA,32)
+            pygame.draw.circle(cover,(*colour,150),(30,30),30,0)
             self.surf.blit(cover,cover.get_rect(center=self.pos))
 
         pygame.draw.circle(self.surf,(0,0,0),self.pos,self.radius,5)
@@ -414,8 +414,8 @@ class Button8: # Slows time by half for 10 seconds, cooldown 20 seconds
             colour = None
 
         if colour is not None:
-            cover = pygame.Surface([50,50],pygame.SRCALPHA,32)
-            pygame.draw.circle(cover,(*colour,150),(25,25),25,0)
+            cover = pygame.Surface([60,60],pygame.SRCALPHA,32)
+            pygame.draw.circle(cover,(*colour,150),(30,30),30,0)
             self.surf.blit(cover,cover.get_rect(center=self.pos))
 
         pygame.draw.circle(self.surf,(0,0,0),self.pos,self.radius,5)
@@ -459,8 +459,8 @@ class Button9: # No-click shooting (hold left-click) for 10 seconds, cooldown 10
             colour = None
 
         if colour is not None:
-            cover = pygame.Surface([50,50],pygame.SRCALPHA,32)
-            pygame.draw.circle(cover,(*colour,150),(25,25),25,0)
+            cover = pygame.Surface([60,60],pygame.SRCALPHA,32)
+            pygame.draw.circle(cover,(*colour,150),(30,30),30,0)
             self.surf.blit(cover,cover.get_rect(center=self.pos))
 
         pygame.draw.circle(self.surf,(0,0,0),self.pos,self.radius,5)
