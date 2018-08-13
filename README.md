@@ -30,9 +30,6 @@ The end goal is to unlock the 10th prestige, at which point you finish the game.
 - Prestige 9: No-click shooting (hold left-click), and no ammo used for 10 seconds, cooldown 10 seconds
 - Prestige 10: Win
 
-# To-do list
-- Draw turret barrel which follows mouse
-
 # Requirements
 I am using the [Python 3.7](https://www.python.org/downloads/release/python-370/) IDLE.\
 Download project and run main.py to use.\
