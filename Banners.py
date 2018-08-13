@@ -158,8 +158,9 @@ class Prestige_Banner:
     # Updates individual timers and prestige availablity
     def update(self):
         self.main_button.update()
+        self.buttons[-1].update(self.buttons[5].shotgun)
 
-        for i in self.buttons:
+        for i in self.buttons[:-1]:
             i.update()
 
     # Button interaction and prestige updates
