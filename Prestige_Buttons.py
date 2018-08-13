@@ -491,11 +491,19 @@ class Button9:
         self.player = player
         self.s = s
         
-    def update(self):
+    def update(self,shotgun):
         self.timer.update()
 
         if self.timer.status == "ability" and pygame.mouse.get_pressed()[0] and not pygame.Rect(pygame.mouse.get_pos()[0]-1,pygame.mouse.get_pos()[1]-1,2,2).colliderect(self.player.rect):
             self.player.bullets.append(Bullet(pygame.mouse.get_pos(),self.s,self.player.bullet_size))
+
+            if shotgun:
+                a,b = Bullet(pygame.mouse.get_pos(),self.s,self.player.bullet_size),Bullet(pygame.mouse.get_pos(),self.s,self.player.bullet_size)
+
+                a.vector = Bullet.normalise(Bullet.rotate(a.vector,10))
+                b.vector = Bullet.normalise(Bullet.rotate(b.vector,-10))
+                
+                self.player.bullets += [a,b]
 
     def draw(self):
         self.surf.blit(logo9,logo9.get_rect(center=self.pos))
