@@ -25,6 +25,25 @@ class Bullet:
         pygame.draw.circle(surf,(255,255,0),list(map(int,self.pos)),int(self.size),0)
         self.rect = pygame.Rect(self.pos[0]-self.size,self.pos[1]-self.size,self.size*2,self.size*2)
 
+class Barrel:
+    def __init__(self,pivot,length,width):
+        self.image = pygame.Surface([length,width],pygame.SRCALPHA,32)
+        
+        pygame.draw.rect(self.image,(40,40,40),(0,0,length,width),0)
+        pygame.draw.rect(self.image,(0,255,255),(0,2.5,length-2.5,width-2.5),0)
+        pygame.draw.rect(self.image,(255,255,255),(0,4,length-4,width-8),0)
+        pygame.draw.rect(self.image,(255,140,0),(0,0,10,width),0)
+        
+        self.pivot = pivot
+        self.offset = [-width,0]
+
+    def rotate(self,surf,angle,pivot,offset):
+        new_image = pygame.transform.rotozoom(surf,-angle,1)
+        return new_image,new_image.get_rect(center=[pivot[i] + Bullet.rotate(offset,angle)[i] for i in range(2)])
+
+    def draw(self,surf,angle):
+        surf.blit(*self.rotate(self.image,angle,self.pivot,self.offset))
+
 class Turret:
     def __init__(self,surface,s):
         # Main game variables
@@ -37,6 +56,8 @@ class Turret:
         self.score = 0
 
         self.init_stats(prestige=0)
+
+        self.barrel = Barrel([i/2 for i in s],80,20)
 
     def init_stats(self,prestige):
         # Initialises stats according to prestige
@@ -179,14 +200,19 @@ class Turret:
         if self.health > 0:
             pygame.draw.rect(self.surf,(0,255,0),list(map(int,(self.s[0]/2-50,self.s[1]/2-50,100*(self.health/self.maxhealth),20))),0)
 
-        pygame.draw.circle(self.surf,(44,44,44),[int(i/2) for i in self.s],10,0)
+        pygame.draw.circle(self.surf,(244,194,44),[int(i/2) for i in self.s],20,0)
+        pygame.draw.circle(self.surf,(255,164,44),[int(i/2) for i in self.s],18,0)
+        pygame.draw.circle(self.surf,(255,100,44),[int(i/2) for i in self.s],15,0)
+        pygame.draw.circle(self.surf,(255,0,0),[int(i/2) for i in self.s],13,0)
 
-        # Turret barrel
-        pass
-    
         # Bullets
         for bullet in self.bullets:
             bullet.draw(self.surf)
+            
+        # Turret barrel
+        quadrant = 1 if self.s[0]/2 <= pygame.mouse.get_pos()[0] <= self.s[0] and self.s[1]/2 <= pygame.mouse.get_pos()[1] <= self.s[1] else (2 if 0 <= pygame.mouse.get_pos()[0] <= self.s[0]/2 and self.s[1]/2 <= pygame.mouse.get_pos()[1] <= self.s[1] else (3 if pygame.mouse.get_pos()[0] <= self.s[0]/2 and 0 <= pygame.mouse.get_pos()[1] <= self.s[1]/2 else 0))
+        angle = (180/math.pi)*math.acos(abs(pygame.mouse.get_pos()[0]-(self.s[0]/2))/math.sqrt(((pygame.mouse.get_pos()[0]-(self.s[0]/2))**2)+((pygame.mouse.get_pos()[1]-(self.s[1]/2)))**2))+(quadrant*90)
+        self.barrel.draw(self.surf,90 + (90-angle if not quadrant % 2 else angle))
 
     def clean(self):
         # Deletes any bullets if they are outside playable area
