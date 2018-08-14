@@ -19,6 +19,7 @@ class Button0:
         self.text = font.render("Prestige",True,(0,0,0))
         self.available = False
         self.rect = r(self.pos,self.radius)
+        self.font = font
 
         self.banner = banner
 
@@ -28,13 +29,16 @@ class Button0:
         self.surf.blit(self.text,self.text.get_rect(center=self.pos))
 
     # Uses negative feedback loop to check prestige availability
-    def update(self):
+    def update(self,prestige):
         self.available = True
         
         for panel in self.banner.buttons:
             for name,button in panel.items():
                 if not (button["used"] == button["use limit"] or name in ["Mags","Regen"]):
                     self.available = False
+
+        if prestige >= 9:
+            self.text = self.font.render("Win",True,(0,139,0))
 
     def onClick(self,mouse,player,enemies,boss,prestige):
         # If player decides to prestige
