@@ -7,9 +7,10 @@ class Enemy:
     _basehealth = 100
     _speed = 2
     _size = 15
-    spawnrate = 10
+    _spawnrate = 10
 
-    def __init__(self,surface,s,prestige=0):
+    def __init__(self,surface,s,banner,prestige=0):
+        self.banner = banner
         self.init_stats(prestige)
 
         # Movement data
@@ -23,11 +24,12 @@ class Enemy:
         self.rect = pygame.Rect(self.pos[0]-self.size,self.pos[1]-self.size,self.size*2,self.size*2)
 
     def init_stats(self,prestige):
-        self.basehealth = self._basehealth + (10 * prestige)
+        self.basehealth = self._basehealth + (10 * prestige) + (self.banner.buttons[2]["Health"]["used"]*self.banner.buttons[2]["Health"]["effect"])
         self.health = self.basehealth
 
-        self.speed = self._speed + (0.5 * prestige)
-        self.size = self._size - prestige
+        self.speed = self._speed + (0.5 * prestige) + (self.banner.buttons[2]["Speed"]["used"]*self.banner.buttons[2]["Speed"]["effect"])
+        self.size = self._size - prestige + (self.banner.buttons[2]["Size"]["used"]*self.banner.buttons[2]["Size"]["effect"])
+        self.spawnrate = self._spawnrate + (self.banner.buttons[2]["Spawn"]["used"]*self.banner.buttons[2]["Spawn"]["effect"])
 
     @staticmethod
     # Static method returns a unit vector
@@ -41,7 +43,7 @@ class Enemy:
 
     def spawn(self,enemies,frame,fps,boss,prestige):
         # Returns original list if it is not the correct time, otherwise returns list with appended enemy
-        return enemies + [Enemy(self.surf,self.s,prestige)] if not frame % (6*self.spawnrate) else enemies
+        return enemies + [Enemy(self.surf,self.s,self.banner,prestige)] if not frame % (6*self.spawnrate) else enemies
 
     def animate(self):
         self.pos = [self.pos[i] + (self.speed*self.vector[i]) for i in range(2)]
