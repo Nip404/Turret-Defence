@@ -66,12 +66,14 @@ def main():
 
     # Loops while user plays; can span over multiple games
     while True:
+        prestige = 0
+        
         turret = Turret(screen,s)
         enemies = []
         boss = Boss(screen,s)
         frame = 1 # Causes an issue with boss spawn: 0 % anything = 0
         banner = Banner(screen,s,small,med,turret,Enemy,boss)
-        prestige_banner = Prestige_Banner(screen,small,turret,banner,s)
+        prestige_banner = Prestige_Banner(screen,small,turret,banner,s,prestige)
 
         paused = False
 
