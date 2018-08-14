@@ -137,10 +137,10 @@ class Banner:
         self.surf.blit(self.banner,(self.startx,0))
 
 class Prestige_Banner:
-    def __init__(self,surf,font,player,banner,s):
+    def __init__(self,surf,font,player,banner,s,prestige=0):
         self.surf = surf
         self.font = font
-        self.prestige = 0 # Main prestige tracker
+        self.prestige = prestige # Main prestige tracker
 
         self.prestige_banner = self.get_banner()
         self.main_button = Button0(banner,self.prestige_banner,self.font) # All buttons
@@ -153,6 +153,12 @@ class Prestige_Banner:
                         Button7(self.prestige_banner,player,s),
                         Button8(self.prestige_banner),
                         Button9(self.prestige_banner,player,s)]
+
+        if self.prestige:
+            for i in range(prestige):
+                self.buttons[i].unlock = True
+
+            banner.boss.init_stats(self.prestige)
 
     # Updates individual timers and prestige availablity
     def update(self):
