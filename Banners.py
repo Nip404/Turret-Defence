@@ -70,9 +70,8 @@ class Banner:
                     try: # Special case for enemies, since they save their attributes in instances
                         setattr(button["var"]["class"],button["var"]["name"],getattr(button["var"]["class"],button["var"]["name"])+button["effect"])
                     except:
-                        for e in enemies:
-                            setattr(e,button["var"]["name"],getattr(e,button["var"]["name"])+button["effect"])
-
+                        pass
+                    
                     button["used"] += 1
                     self.turret.money -= button["money"]
                     self.turret.score += 100 * button["used"]
