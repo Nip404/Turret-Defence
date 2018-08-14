@@ -156,7 +156,10 @@ class Prestige_Banner:
 
         if self.prestige:
             for i in range(prestige):
-                self.buttons[i].unlock = True
+                try:
+                    self.buttons[i].unlock = True
+                except IndexError:
+                    pass
 
             banner.boss.init_stats(self.prestige)
 
