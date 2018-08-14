@@ -132,7 +132,7 @@ def main():
 
                 # Enemies only spawn when boss is dead
                 if not boss.alive:
-                    enemies = Enemy(screen,s).spawn(enemies,frame,fps,boss,prestige_banner.prestige)
+                    enemies = Enemy(screen,s,banner).spawn(enemies,frame,fps,boss,prestige_banner.prestige)
                     
                 boss.respawn(frame)        
                 turret.regen(frame,fps)
