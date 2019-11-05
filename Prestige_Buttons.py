@@ -5,44 +5,44 @@ import pygame
 import time
 
 pygame.init()
-tmp = pygame.display.set_mode([1,1])
+tmp = pygame.display.set_mode([1, 1])
 
-r = lambda pos,rad: pygame.Rect(pos[0]-rad,pos[1]-rad,rad*2,rad*2) # Creates a rect from centre and radius
-logo1,logo2,logo3,logo4,logo5,logo6,logo7,logo8,logo9 = [pygame.image.load(f'Logos/logo{i}.png').convert() for i in range(1,10)]
+r = lambda pos, rad: pygame.Rect(pos[0] - rad, pos[1] - rad, rad*2, rad*2) # Creates a rect from centre and radius
+logo1, logo2, logo3, logo4, logo5, logo6, logo7, logo8, logo9 = [pygame.image.load(f'Logos/logo{i}.png').convert() for i in range(1, 10)]
 
 # Main prestige button
 class Button0:
-    def __init__(self,banner,surf,font):
+    def __init__(self, banner, surf, font):
         self.surf = surf
-        self.pos = [50,50]
+        self.pos = [50, 50]
         self.radius = 40
-        self.text = font.render("Prestige",True,(0,0,0))
+        self.text = font.render("Prestige", True, (0, 0, 0))
         self.available = False
-        self.rect = r(self.pos,self.radius)
+        self.rect = r(self.pos, self.radius)
         self.font = font
 
         self.banner = banner
 
     def draw(self):
         # Draws white is not available, otherwise, draws green
-        pygame.draw.circle(self.surf,(255,255,255) if not self.available else (0,255,0),self.pos,self.radius,0)
-        self.surf.blit(self.text,self.text.get_rect(center=self.pos))
+        pygame.draw.circle(self.surf, (255, 255, 255) if not self.available else (0, 255, 0), self.pos, self.radius, 0)
+        self.surf.blit(self.text, self.text.get_rect(center=self.pos))
 
     # Uses negative feedback loop to check prestige availability
-    def update(self,prestige):
+    def update(self, prestige):
         self.available = True
         
         for panel in self.banner.buttons:
-            for name,button in panel.items():
-                if not (button["used"] == button["use limit"] or name in ["Mags","Regen"]):
+            for name, button in panel.items():
+                if not (button["used"] == button["use limit"] or name in ["Mags", "Regen"]):
                     self.available = False
 
         if prestige >= 9:
-            self.text = self.font.render("Win",True,(0,139,0))
+            self.text = self.font.render("Win", True, (0, 139, 0))
 
-    def onClick(self,mouse,player,enemies,boss,prestige):
+    def onClick(self, mouse, player, enemies, boss, prestige):
         # If player decides to prestige
-        if pygame.Rect(mouse[0]-1,mouse[1]-1,2,2).colliderect(self.rect) and self.available:
+        if pygame.Rect(mouse[0]-1, mouse[1]-1, 2, 2).colliderect(self.rect) and self.available:
             self.available = False
 
             # Resets button stats
@@ -51,13 +51,13 @@ class Button0:
                     button["used"] = 0
 
             # Resets stats according to new prestige
-            player.init_stats(prestige+1)
-            boss.init_stats(prestige+1)
+            player.init_stats(prestige + 1)
+            boss.init_stats(prestige + 1)
 
             for i in enemies:
-                i.init_stats(prestige+1)
+                i.init_stats(prestige + 1)
 
-            return prestige+1
+            return prestige + 1
         return prestige
 
 '''
@@ -80,14 +80,14 @@ If the button is currently on cooldown, it tints it red.
 '''
 
 class Button1:
-    def __init__(self,surf,player):
-        self.pos = [139,50]
+    def __init__(self, surf, player):
+        self.pos = [139, 50]
         self.radius = 30
         self.surf = surf
         self.unlocked = False
-        self.rect = r(self.pos,self.radius)
+        self.rect = r(self.pos, self.radius)
 
-        self.timer = Timer(10,5)
+        self.timer = Timer(10, 5)
         self.player = player
 
     def update(self):
@@ -95,27 +95,27 @@ class Button1:
         self.player.health = self.player.maxhealth if self.timer.status == "ability" else self.player.health
 
     def draw(self):
-        self.surf.blit(logo1,logo1.get_rect(center=self.pos))
-        pygame.draw.circle(self.surf,(50,50,150),self.pos,40,10)
+        self.surf.blit(logo1, logo1.get_rect(center=self.pos))
+        pygame.draw.circle(self.surf, (50, 50, 150), self.pos, 40, 10)
 
         if not self.unlocked:
-            colour = (50,50,50)
+            colour = (50, 50, 50)
         elif self.timer.status == "cooldown":
-            colour = (255,0,0)
+            colour = (255, 0, 0)
         elif self.timer.status == "ability":
-            colour = (0,255,0)
+            colour = (0, 255, 0)
         else:
             colour = None
 
         if colour is not None:
-            cover = pygame.Surface([60,60],pygame.SRCALPHA,32)
-            pygame.draw.circle(cover,(*colour,150),(30,30),30,0)
-            self.surf.blit(cover,cover.get_rect(center=self.pos))
+            cover = pygame.Surface([60, 60], pygame.SRCALPHA, 32)
+            pygame.draw.circle(cover, (*colour, 150), (30, 30), 30, 0)
+            self.surf.blit(cover, cover.get_rect(center=self.pos))
 
-        pygame.draw.circle(self.surf,(0,0,0),self.pos,self.radius,5)
+        pygame.draw.circle(self.surf, (0, 0, 0), self.pos, self.radius, 5)
 
-    def onClick(self,mouse):
-        if pygame.Rect(mouse[0]-1,mouse[1]-1,2,2).colliderect(self.rect) and self.unlocked:
+    def onClick(self, mouse):
+        if pygame.Rect(mouse[0]-1, mouse[1]-1, 2, 2).colliderect(self.rect) and self.unlocked:
             self.timer.start()
 
     @property
@@ -127,45 +127,45 @@ class Button1:
         self.unlocked = new
 
 class Button2:
-    def __init__(self,surf,player):
-        self.pos = [218,50]
+    def __init__(self, surf, player):
+        self.pos = [218, 50]
         self.radius = 30
         self.surf = surf
         self.unlocked = False
-        self.rect = r(self.pos,self.radius)
+        self.rect = r(self.pos, self.radius)
 
-        self.timer = Timer(5,20)
+        self.timer = Timer(5, 20)
         self.player = player
 
     def update(self):
         self.timer.update()
         
     def draw(self):
-        self.surf.blit(logo2,logo2.get_rect(center=self.pos))
-        pygame.draw.circle(self.surf,(50,50,150),self.pos,40,10)
+        self.surf.blit(logo2, logo2.get_rect(center=self.pos))
+        pygame.draw.circle(self.surf, (50, 50, 150), self.pos, 40, 10)
 
         if not self.unlocked:
-            colour = (50,50,50)
+            colour = (50, 50, 50)
         elif self.timer.status == "cooldown":
-            colour = (255,0,0)
+            colour = (255, 0, 0)
         elif self.timer.status == "ability":
-            colour = (0,255,0)
+            colour = (0, 255, 0)
         else:
             colour = None
 
         if colour is not None:
-            cover = pygame.Surface([60,60],pygame.SRCALPHA,32)
-            pygame.draw.circle(cover,(*colour,150),(30,30),30,0)
-            self.surf.blit(cover,cover.get_rect(center=self.pos))
+            cover = pygame.Surface([60, 60], pygame.SRCALPHA, 32)
+            pygame.draw.circle(cover, (*colour, 150), (30, 30), 30, 0)
+            self.surf.blit(cover, cover.get_rect(center=self.pos))
 
-        pygame.draw.circle(self.surf,(0,0,0),self.pos,self.radius,5)
+        pygame.draw.circle(self.surf, (0, 0, 0), self.pos, self.radius, 5)
 
     @property
     def instakill(self):
-        return {"cooldown":False,"ability":True,"waiting":False}[self.timer.status]
+        return {"cooldown": False, "ability": True, "waiting": False}[self.timer.status]
 
-    def onClick(self,mouse):
-        if pygame.Rect(mouse[0]-1,mouse[1]-1,2,2).colliderect(self.rect) and self.unlocked:
+    def onClick(self, mouse):
+        if pygame.Rect(mouse[0]-1, mouse[1]-1, 2, 2).colliderect(self.rect) and self.unlocked:
             self.timer.start()
 
     @property
@@ -173,48 +173,48 @@ class Button2:
         return self.unlocked
 
     @unlock.setter
-    def unlock(self,new):
+    def unlock(self, new):
         self.unlocked = new
 
 class Button3:
-    def __init__(self,surf):
-        self.pos = [297,50]
+    def __init__(self, surf):
+        self.pos = [297, 50]
         self.radius = 30
         self.surf = surf
         self.unlocked = False
-        self.rect = r(self.pos,self.radius)
+        self.rect = r(self.pos, self.radius)
 
-        self.timer = Timer(5,10)
+        self.timer = Timer(5, 10)
 
     def update(self):
         self.timer.update()
 
     def draw(self):
-        self.surf.blit(logo3,logo3.get_rect(center=self.pos))
-        pygame.draw.circle(self.surf,(50,50,150),self.pos,40,10)
+        self.surf.blit(logo3, logo3.get_rect(center=self.pos))
+        pygame.draw.circle(self.surf, (50, 50, 150), self.pos, 40, 10)
 
         if not self.unlocked:
-            colour = (50,50,50)
+            colour = (50, 50, 50)
         elif self.timer.status == "cooldown":
-            colour = (255,0,0)
+            colour = (255, 0, 0)
         elif self.timer.status == "ability":
-            colour = (0,255,0)
+            colour = (0, 255, 0)
         else:
             colour = None
 
         if colour is not None:
-            cover = pygame.Surface([60,60],pygame.SRCALPHA,32)
-            pygame.draw.circle(cover,(*colour,150),(30,30),30,0)
-            self.surf.blit(cover,cover.get_rect(center=self.pos))
+            cover = pygame.Surface([60, 60], pygame.SRCALPHA, 32)
+            pygame.draw.circle(cover, (*colour, 150), (30, 30), 30, 0)
+            self.surf.blit(cover, cover.get_rect(center=self.pos))
 
-        pygame.draw.circle(self.surf,(0,0,0),self.pos,self.radius,5)
+        pygame.draw.circle(self.surf, (0, 0, 0), self.pos, self.radius, 5)
 
     @property
     def targeted(self):
-        return {"cooldown":False,"ability":True,"waiting":False}[self.timer.status]
+        return {"cooldown": False, "ability": True, "waiting": False}[self.timer.status]
 
-    def onClick(self,mouse):
-        if pygame.Rect(mouse[0]-1,mouse[1]-1,2,2).colliderect(self.rect) and self.unlocked:
+    def onClick(self, mouse):
+        if pygame.Rect(mouse[0]-1, mouse[1]-1, 2, 2).colliderect(self.rect) and self.unlocked:
             self.timer.start()
 
     @property
@@ -222,18 +222,18 @@ class Button3:
         return self.unlocked
 
     @unlock.setter
-    def unlock(self,new):
+    def unlock(self, new):
         self.unlocked = new
 
 class Button4:
-    def __init__(self,surf,player):
-        self.pos = [376,50]
+    def __init__(self, surf, player):
+        self.pos = [376, 50]
         self.radius = 30
         self.surf = surf
         self.unlocked = False
-        self.rect = r(self.pos,self.radius)
+        self.rect = r(self.pos, self.radius)
 
-        self.timer = Timer(20,10)
+        self.timer = Timer(20, 10)
         self.player = player
 
     def update(self):
@@ -243,27 +243,27 @@ class Button4:
             self.player.rounds = self.player.round_size
 
     def draw(self):
-        self.surf.blit(logo4,logo4.get_rect(center=self.pos))
-        pygame.draw.circle(self.surf,(50,50,150),self.pos,40,10)
+        self.surf.blit(logo4, logo4.get_rect(center=self.pos))
+        pygame.draw.circle(self.surf, (50, 50, 150), self.pos, 40, 10)
 
         if not self.unlocked:
-            colour = (50,50,50)
+            colour = (50, 50, 50)
         elif self.timer.status == "cooldown":
-            colour = (255,0,0)
+            colour = (255, 0, 0)
         elif self.timer.status == "ability":
-            colour = (0,255,0)
+            colour = (0, 255, 0)
         else:
             colour = None
 
         if colour is not None:
-            cover = pygame.Surface([60,60],pygame.SRCALPHA,32)
-            pygame.draw.circle(cover,(*colour,150),(30,30),30,0)
-            self.surf.blit(cover,cover.get_rect(center=self.pos))
+            cover = pygame.Surface([60, 60], pygame.SRCALPHA, 32)
+            pygame.draw.circle(cover, (*colour, 150), (30, 30), 30, 0)
+            self.surf.blit(cover, cover.get_rect(center=self.pos))
 
-        pygame.draw.circle(self.surf,(0,0,0),self.pos,self.radius,5)
+        pygame.draw.circle(self.surf, (0, 0, 0), self.pos, self.radius, 5)
 
-    def onClick(self,mouse):
-        if pygame.Rect(mouse[0]-1,mouse[1]-1,2,2).colliderect(self.rect) and self.unlocked:
+    def onClick(self, mouse):
+        if pygame.Rect(mouse[0]-1, mouse[1]-1, 2, 2).colliderect(self.rect) and self.unlocked:
             self.timer.start()
             self.player.magasines += 2
 
@@ -272,48 +272,48 @@ class Button4:
         return self.unlocked
 
     @unlock.setter
-    def unlock(self,new):
+    def unlock(self, new):
         self.unlocked = new
 
 class Button5:
     def __init__(self,surf):
-        self.pos = [455,50]
+        self.pos = [455, 50]
         self.radius = 30
         self.surf = surf
         self.unlocked = False
-        self.rect = r(self.pos,self.radius)
+        self.rect = r(self.pos, self.radius)
 
-        self.timer = Timer(5,20)
+        self.timer = Timer(5, 20)
 
     def update(self):
         self.timer.update()
 
     def draw(self):
-        self.surf.blit(logo5,logo5.get_rect(center=self.pos))
-        pygame.draw.circle(self.surf,(50,50,150),self.pos,40,10)
+        self.surf.blit(logo5, logo5.get_rect(center=self.pos))
+        pygame.draw.circle(self.surf, (50, 50, 150), self.pos, 40, 10)
 
         if not self.unlocked:
-            colour = (50,50,50)
+            colour = (50, 50, 50)
         elif self.timer.status == "cooldown":
-            colour = (255,0,0)
+            colour = (255, 0, 0)
         elif self.timer.status == "ability":
-            colour = (0,255,0)
+            colour = (0, 255, 0)
         else:
             colour = None
 
         if colour is not None:
-            cover = pygame.Surface([60,60],pygame.SRCALPHA,32)
-            pygame.draw.circle(cover,(*colour,150),(30,30),30,0)
-            self.surf.blit(cover,cover.get_rect(center=self.pos))
+            cover = pygame.Surface([60, 60], pygame.SRCALPHA, 32)
+            pygame.draw.circle(cover, (*colour, 150), (30, 30), 30, 0)
+            self.surf.blit(cover, cover.get_rect(center=self.pos))
 
-        pygame.draw.circle(self.surf,(0,0,0),self.pos,self.radius,5)
+        pygame.draw.circle(self.surf, (0, 0, 0), self.pos, self.radius, 5)
 
     @property
     def gold_rush(self):
-        return {"cooldown":False,"ability":True,"waiting":False}[self.timer.status]
+        return {"cooldown": False, "ability": True, "waiting": False}[self.timer.status]
 
-    def onClick(self,mouse):
-        if pygame.Rect(mouse[0]-1,mouse[1]-1,2,2).colliderect(self.rect) and self.unlocked:
+    def onClick(self, mouse):
+        if pygame.Rect(mouse[0]-1, mouse[1]-1, 2, 2).colliderect(self.rect) and self.unlocked:
             self.timer.start()
 
     @property
@@ -321,48 +321,48 @@ class Button5:
         return self.unlocked
 
     @unlock.setter
-    def unlock(self,new):
+    def unlock(self, new):
         self.unlocked = new
 
 class Button6:
-    def __init__(self,surf):
-        self.pos = [534,50]
+    def __init__(self, surf):
+        self.pos = [534, 50]
         self.radius = 30
         self.surf = surf
         self.unlocked = False
-        self.rect = r(self.pos,self.radius)
+        self.rect = r(self.pos, self.radius)
 
-        self.timer = Timer(5,10)
+        self.timer = Timer(5, 10)
 
     def update(self):
         self.timer.update()
 
     def draw(self):
-        self.surf.blit(logo6,logo6.get_rect(center=self.pos))
-        pygame.draw.circle(self.surf,(50,50,150),self.pos,40,10)
+        self.surf.blit(logo6, logo6.get_rect(center=self.pos))
+        pygame.draw.circle(self.surf, (50, 50, 150), self.pos, 40, 10)
 
         if not self.unlocked:
-            colour = (50,50,50)
+            colour = (50, 50, 50)
         elif self.timer.status == "cooldown":
-            colour = (255,0,0)
+            colour = (255, 0, 0)
         elif self.timer.status == "ability":
-            colour = (0,255,0)
+            colour = (0, 255, 0)
         else:
             colour = None
 
         if colour is not None:
-            cover = pygame.Surface([60,60],pygame.SRCALPHA,32)
-            pygame.draw.circle(cover,(*colour,150),(30,30),30,0)
-            self.surf.blit(cover,cover.get_rect(center=self.pos))
+            cover = pygame.Surface([60, 60], pygame.SRCALPHA, 32)
+            pygame.draw.circle(cover, (*colour, 150), (30, 30), 30, 0)
+            self.surf.blit(cover, cover.get_rect(center=self.pos))
 
-        pygame.draw.circle(self.surf,(0,0,0),self.pos,self.radius,5)
+        pygame.draw.circle(self.surf, (0, 0, 0), self.pos, self.radius, 5)
 
     @property
     def shotgun(self):
-        return {"cooldown":False,"ability":True,"waiting":False}[self.timer.status]
+        return {"cooldown": False, "ability": True, "waiting": False}[self.timer.status]
 
-    def onClick(self,mouse):
-        if pygame.Rect(mouse[0]-1,mouse[1]-1,2,2).colliderect(self.rect) and self.unlocked:
+    def onClick(self, mouse):
+        if pygame.Rect(mouse[0]-1, mouse[1]-1, 2, 2).colliderect(self.rect) and self.unlocked:
             self.timer.start()
 
     @property
@@ -370,18 +370,18 @@ class Button6:
         return self.unlocked
 
     @unlock.setter
-    def unlock(self,new):
+    def unlock(self, new):
         self.unlocked = new
 
 class Button7: 
-    def __init__(self,surf,player,s):
-        self.pos = [613,50]
+    def __init__(self, surf, player, s):
+        self.pos = [613, 50]
         self.radius = 30
         self.surf = surf
         self.unlocked = False
-        self.rect = r(self.pos,self.radius)
+        self.rect = r(self.pos, self.radius)
 
-        self.timer = Timer(1,15)
+        self.timer = Timer(1, 15)
         self.player = player
         self.s = s
 
@@ -393,8 +393,8 @@ class Button7:
 
         if self.timer.status == "ability" and self.shots <= self.max: 
             for i in range(60):
-                b = Bullet([0,0],self.s,self.player.bullet_size)
-                b.vector = Bullet.rotate([1,0],i*6)
+                b = Bullet([0, 0], self.s, self.player.bullet_size)
+                b.vector = Bullet.rotate([1, 0], i * 6)
                 self.player.bullets.append(b)
 
             self.shots += 1
@@ -403,27 +403,27 @@ class Button7:
             self.shots = 0
 
     def draw(self):
-        self.surf.blit(logo7,logo7.get_rect(center=self.pos))
-        pygame.draw.circle(self.surf,(50,50,150),self.pos,40,10)
+        self.surf.blit(logo7, logo7.get_rect(center=self.pos))
+        pygame.draw.circle(self.surf, (50, 50, 150), self.pos, 40, 10)
 
         if not self.unlocked:
-            colour = (50,50,50)
+            colour = (50, 50, 50)
         elif self.timer.status == "cooldown":
-            colour = (255,0,0)
+            colour = (255, 0, 0)
         elif self.timer.status == "ability":
-            colour = (0,255,0)
+            colour = (0, 255, 0)
         else:
             colour = None
 
         if colour is not None:
-            cover = pygame.Surface([60,60],pygame.SRCALPHA,32)
-            pygame.draw.circle(cover,(*colour,150),(30,30),30,0)
-            self.surf.blit(cover,cover.get_rect(center=self.pos))
+            cover = pygame.Surface([60, 60], pygame.SRCALPHA, 32)
+            pygame.draw.circle(cover, (*colour, 150), (30, 30), 30, 0)
+            self.surf.blit(cover, cover.get_rect(center=self.pos))
 
-        pygame.draw.circle(self.surf,(0,0,0),self.pos,self.radius,5)
+        pygame.draw.circle(self.surf, (0, 0, 0), self.pos, self.radius, 5)
         
-    def onClick(self,mouse):
-        if pygame.Rect(mouse[0]-1,mouse[1]-1,2,2).colliderect(self.rect) and self.unlocked:
+    def onClick(self, mouse):
+        if pygame.Rect(mouse[0]-1, mouse[1]-1, 2, 2).colliderect(self.rect) and self.unlocked:
             self.timer.start()
 
     @property
@@ -431,48 +431,48 @@ class Button7:
         return self.unlocked
 
     @unlock.setter
-    def unlock(self,new):
+    def unlock(self, new):
         self.unlocked = new
 
 class Button8: 
-    def __init__(self,surf):
-        self.pos = [692,50]
+    def __init__(self, surf):
+        self.pos = [692, 50]
         self.radius = 30
         self.surf = surf
         self.unlocked = False
-        self.rect = r(self.pos,self.radius)
+        self.rect = r(self.pos, self.radius)
 
-        self.timer = Timer(10,20)
+        self.timer = Timer(10, 20)
 
     def update(self):
         self.timer.update()
 
     def draw(self):
-        self.surf.blit(logo8,logo8.get_rect(center=self.pos))
-        pygame.draw.circle(self.surf,(50,50,150),self.pos,40,10)
+        self.surf.blit(logo8, logo8.get_rect(center=self.pos))
+        pygame.draw.circle(self.surf, (50, 50, 150), self.pos, 40, 10)
 
         if not self.unlocked:
-            colour = (50,50,50)
+            colour = (50, 50, 50)
         elif self.timer.status == "cooldown":
-            colour = (255,0,0)
+            colour = (255, 0, 0)
         elif self.timer.status == "ability":
-            colour = (0,255,0)
+            colour = (0, 255, 0)
         else:
             colour = None
 
         if colour is not None:
-            cover = pygame.Surface([60,60],pygame.SRCALPHA,32)
-            pygame.draw.circle(cover,(*colour,150),(30,30),30,0)
-            self.surf.blit(cover,cover.get_rect(center=self.pos))
+            cover = pygame.Surface([60, 60], pygame.SRCALPHA, 32)
+            pygame.draw.circle(cover, (*colour, 150), (30, 30), 30, 0)
+            self.surf.blit(cover, cover.get_rect(center=self.pos))
 
-        pygame.draw.circle(self.surf,(0,0,0),self.pos,self.radius,5)
+        pygame.draw.circle(self.surf, (0, 0, 0), self.pos, self.radius, 5)
 
     @property
     def slowmo(self):
-        return {"cooldown":False,"ability":True,"waiting":False}[self.timer.status]
+        return {"cooldown": False, "ability": True, "waiting": False}[self.timer.status]
 
-    def onClick(self,mouse):
-        if pygame.Rect(mouse[0]-1,mouse[1]-1,2,2).colliderect(self.rect) and self.unlocked:
+    def onClick(self, mouse):
+        if pygame.Rect(mouse[0]-1, mouse[1]-1, 2, 2).colliderect(self.rect) and self.unlocked:
             self.timer.start()
 
     @property
@@ -480,61 +480,61 @@ class Button8:
         return self.unlocked
 
     @unlock.setter
-    def unlock(self,new):
+    def unlock(self, new):
         self.unlocked = new
 
 class Button9: 
-    def __init__(self,surf,player,s):
-        self.pos = [771,50]
+    def __init__(self, surf, player, s):
+        self.pos = [771, 50]
         self.radius = 30
         self.surf = surf
         self.unlocked = False
-        self.rect = r(self.pos,self.radius)
+        self.rect = r(self.pos, self.radius)
 
-        self.timer = Timer(10,10)
+        self.timer = Timer(10, 10)
         self.player = player
         self.s = s
         
-    def update(self,shotgun):
+    def update(self, shotgun):
         self.timer.update()
 
-        if self.timer.status == "ability" and pygame.mouse.get_pressed()[0] and not pygame.Rect(pygame.mouse.get_pos()[0]-1,pygame.mouse.get_pos()[1]-1,2,2).colliderect(self.player.rect):
-            self.player.bullets.append(Bullet(pygame.mouse.get_pos(),self.s,self.player.bullet_size))
+        if self.timer.status == "ability" and pygame.mouse.get_pressed()[0] and not pygame.Rect(pygame.mouse.get_pos()[0]-1, pygame.mouse.get_pos()[1]-1, 2, 2).colliderect(self.player.rect):
+            self.player.bullets.append(Bullet(pygame.mouse.get_pos(), self.s, self.player.bullet_size))
 
             if shotgun:
-                a,b = Bullet(pygame.mouse.get_pos(),self.s,self.player.bullet_size),Bullet(pygame.mouse.get_pos(),self.s,self.player.bullet_size)
+                a, b = Bullet(pygame.mouse.get_pos(), self.s, self.player.bullet_size), Bullet(pygame.mouse.get_pos(), self.s, self.player.bullet_size)
 
-                a.vector = Bullet.normalise(Bullet.rotate(a.vector,10))
-                b.vector = Bullet.normalise(Bullet.rotate(b.vector,-10))
+                a.vector = Bullet.normalise(Bullet.rotate(a.vector, 10))
+                b.vector = Bullet.normalise(Bullet.rotate(b.vector, -10))
                 
-                self.player.bullets += [a,b]
+                self.player.bullets += [a, b]
 
     def draw(self):
-        self.surf.blit(logo9,logo9.get_rect(center=self.pos))
-        pygame.draw.circle(self.surf,(50,50,150),self.pos,40,10)
+        self.surf.blit(logo9, logo9.get_rect(center=self.pos))
+        pygame.draw.circle(self.surf, (50, 50, 150), self.pos, 40, 10)
 
         if not self.unlocked:
-            colour = (50,50,50)
+            colour = (50, 50, 50)
         elif self.timer.status == "cooldown":
-            colour = (255,0,0)
+            colour = (255, 0, 0)
         elif self.timer.status == "ability":
-            colour = (0,255,0)
+            colour = (0, 255, 0)
         else:
             colour = None
 
         if colour is not None:
-            cover = pygame.Surface([60,60],pygame.SRCALPHA,32)
-            pygame.draw.circle(cover,(*colour,150),(30,30),30,0)
-            self.surf.blit(cover,cover.get_rect(center=self.pos))
+            cover = pygame.Surface([60, 60], pygame.SRCALPHA, 32)
+            pygame.draw.circle(cover, (*colour, 150), (30, 30), 30, 0)
+            self.surf.blit(cover, cover.get_rect(center=self.pos))
 
-        pygame.draw.circle(self.surf,(0,0,0),self.pos,self.radius,5)
+        pygame.draw.circle(self.surf, (0, 0, 0), self.pos, self.radius, 5)
 
     @property
     def auto(self):
-        return {"cooldown":False,"ability":True,"waiting":False}[self.timer.status]
+        return {"cooldown": False, "ability": True, "waiting": False}[self.timer.status]
 
-    def onClick(self,mouse):
-        if pygame.Rect(mouse[0]-1,mouse[1]-1,2,2).colliderect(self.rect) and self.unlocked:
+    def onClick(self, mouse):
+        if pygame.Rect(mouse[0]-1, mouse[1]-1, 2, 2).colliderect(self.rect) and self.unlocked:
             self.timer.start()
 
     @property
@@ -542,5 +542,5 @@ class Button9:
         return self.unlocked
 
     @unlock.setter
-    def unlock(self,new):
+    def unlock(self, new):
         self.unlocked = new
