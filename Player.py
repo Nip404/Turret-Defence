@@ -2,11 +2,11 @@ import pygame
 import math
 
 class Bullet:
-    def __init__(self,mouse,s,size): # Mouse pos, destination, screensize, bullet size
+    def __init__(self, mouse, s, size): # Mouse pos, destination, screensize, bullet size
         self.vector = self.normalise([mouse[i] - [i/2 for i in s][i] for i in range(2)])
         self.pos = [i/2 for i in s]
         self.size = size
-        self.rect = pygame.Rect(self.pos[0]-self.size,self.pos[1]-self.size,self.size*2,self.size*2)
+        self.rect = pygame.Rect(self.pos[0]-self.size, self.pos[1]-self.size, self.size*2, self.size*2)
 
     # Static method returns a unit vector
     @staticmethod
@@ -14,42 +14,42 @@ class Bullet:
         return [i/math.sqrt(sum(i**2 for i in vector)) for i in vector]
 
     @staticmethod
-    def rotate(vector,theta):
-        return [(vector[0]*math.cos(math.radians(theta)))-(vector[1]*math.sin(math.radians(theta))),(vector[0]*math.sin(math.radians(theta)))+(vector[1]*math.cos(math.radians(theta)))]
+    def rotate(vector, theta):
+        return [(vector[0] * math.cos(math.radians(theta))) - (vector[1] * math.sin(math.radians(theta))), (vector[0] * math.sin(math.radians(theta))) + (vector[1] * math.cos(math.radians(theta)))]
 
-    def animate(self,speed=4):
+    def animate(self, speed=4):
         # Adds vector to current pos
-        self.pos = [self.pos[i] + (speed*self.vector[i]) for i in range(2)]
+        self.pos = [self.pos[i] + (speed * self.vector[i]) for i in range(2)]
 
-    def draw(self,surf):
-        pygame.draw.circle(surf,(255,255,0),list(map(int,self.pos)),int(self.size),0)
-        self.rect = pygame.Rect(self.pos[0]-self.size,self.pos[1]-self.size,self.size*2,self.size*2)
+    def draw(self, surf):
+        pygame.draw.circle(surf, (255, 255, 0), list(map(int, self.pos)), int(self.size), 0)
+        self.rect = pygame.Rect(self.pos[0]-self.size, self.pos[1]-self.size, self.size*2, self.size*2)
 
 class Barrel:
-    def __init__(self,pivot,length,width):
-        self.image = pygame.Surface([length,width],pygame.SRCALPHA,32)
+    def __init__(self, pivot, length, width):
+        self.image = pygame.Surface([length, width], pygame.SRCALPHA, 32)
         
-        pygame.draw.rect(self.image,(40,40,40),(0,0,length,width),0)
-        pygame.draw.rect(self.image,(0,255,255),(0,2.5,length-2.5,width-2.5),0)
-        pygame.draw.rect(self.image,(255,255,255),(0,4,length-4,width-8),0)
-        pygame.draw.rect(self.image,(255,140,0),(0,0,10,width),0)
+        pygame.draw.rect(self.image, (40, 40, 40), (0, 0, length, width), 0)
+        pygame.draw.rect(self.image, (0, 255, 255), (0, 2.5, length - 2.5, width - 2.5), 0)
+        pygame.draw.rect(self.image, (255, 255, 255), (0, 4, length - 4, width - 8), 0)
+        pygame.draw.rect(self.image, (255, 140, 0), (0, 0, 10, width), 0)
         
         self.pivot = pivot
-        self.offset = [-width,0]
+        self.offset = [-width, 0]
 
-    def rotate(self,surf,angle,pivot,offset):
-        new_image = pygame.transform.rotozoom(surf,-angle,1)
-        return new_image,new_image.get_rect(center=[pivot[i] + Bullet.rotate(offset,angle)[i] for i in range(2)])
+    def rotate(self, surf, angle, pivot, offset):
+        new_image = pygame.transform.rotozoom(surf, -angle, 1)
+        return new_image, new_image.get_rect(center=[pivot[i] + Bullet.rotate(offset, angle)[i] for i in range(2)])
 
-    def draw(self,surf,angle):
-        surf.blit(*self.rotate(self.image,angle,self.pivot,self.offset))
+    def draw(self, surf, angle):
+        surf.blit(*self.rotate(self.image, angle, self.pivot, self.offset))
 
 class Turret:
-    def __init__(self,surface,s):
+    def __init__(self, surface, s):
         # Main game variables
         self.surf = surface
         self.s = s
-        self.rect = pygame.Rect(self.s[0]/2-25,self.s[1]/2-25,50,50)
+        self.rect = pygame.Rect(self.s[0]/2 - 25, self.s[1]/2 - 25, 50, 50)
         self.bullets = []
         self.kills = 0
         self.money = 0
@@ -57,9 +57,9 @@ class Turret:
 
         self.init_stats(prestige=0)
 
-        self.barrel = Barrel([i/2 for i in s],80,20)
+        self.barrel = Barrel([i/2 for i in s], 80, 20)
 
-    def init_stats(self,prestige):
+    def init_stats(self, prestige):
         # Initialises stats according to prestige
         self.maxhealth = 100 - (5 * prestige)
         self.health = self.maxhealth
@@ -81,7 +81,7 @@ class Turret:
         for bullet in self.bullets:
             bullet.animate(self.bullet_speed)
 
-    def collide(self,enemies,boss,gold_rush,instakill):
+    def collide(self, enemies, boss, gold_rush, instakill):
         # Checks for overflow
         if self.health > self.maxhealth:
             self.health = self.maxhealth
@@ -150,17 +150,17 @@ class Turret:
         self.damage = old_damage
 
         # Removes used bullets and dead enemies with updated money and score
-        self.bullets = [i for p,i in enumerate(self.bullets) if not p in used_bullets]
-        return [i for p,i in enumerate(enemies) if not p in dead_enemies],boss
+        self.bullets = [i for p, i in enumerate(self.bullets) if not p in used_bullets]
+        return [i for p, i in enumerate(enemies) if not p in dead_enemies], boss
 
-    def shoot(self,mouse,enemies=[],targeted=False,shotgun=False,auto=False): # If auto-aim ability is on, shoot at nearest enemy
+    def shoot(self, mouse, enemies=[], targeted=False, shotgun=False, auto=False): # If auto-aim ability is on, shoot at nearest enemy
         # Dosen't shoot if rounds are empty or mouse in clicking on turret or mouse is outside playable area
-        if not self.rounds or pygame.Rect(mouse[0]-1,mouse[1]-1,2,2).colliderect(self.rect) or not all(0 <= i <= self.s[p] for p,i in enumerate(mouse)) or auto:
+        if not self.rounds or pygame.Rect(mouse[0]-1, mouse[1]-1, 2, 2).colliderect(self.rect) or not all(0 <= i <= self.s[p] for p, i in enumerate(mouse)) or auto:
             return
 
         if targeted and len(enemies):
             # Calculates nearest enemy from turret
-            distances = [math.sqrt(((self.s[0]/2-e.pos[0])**2)+((self.s[1]/2-e.pos[1])**2)) for e in enemies]
+            distances = [math.sqrt(((self.s[0]/2 - e.pos[0])**2) + ((self.s[1]/2 - e.pos[1])**2)) for e in enemies]
             bullet_pos = enemies[distances.index(max(distances))].pos
 
         else:
@@ -171,11 +171,11 @@ class Turret:
         self.rounds -= 1
 
         if shotgun:
-            a,b = Bullet(bullet_pos,self.s,self.bullet_size),Bullet(bullet_pos,self.s,self.bullet_size)
-            a.vector = Bullet.normalise(Bullet.rotate(a.vector,10))
-            b.vector = Bullet.normalise(Bullet.rotate(b.vector,-10))
+            a,b = Bullet(bullet_pos, self.s, self.bullet_size), Bullet(bullet_pos, self.s, self.bullet_size)
+            a.vector = Bullet.normalise(Bullet.rotate(a.vector, 10))
+            b.vector = Bullet.normalise(Bullet.rotate(b.vector, -10))
 
-            self.bullets += [a,b]
+            self.bullets += [a, b]
 
     def reload(self):
         # Must empty clip before reloading, and must have a magasine available or be able to afford one
@@ -183,7 +183,7 @@ class Turret:
             self.magasines -= 1
             self.rounds = self.round_size
 
-    def regen(self,frame,fps):
+    def regen(self, frame, fps):
         # Regenerates by a certain factor at a certain rate (both are upgradable)
         if not frame % (fps * self.regen_rate):
             self.health += self.regen_factor
@@ -194,16 +194,16 @@ class Turret:
 
     def draw(self):
         # Turret body
-        pygame.draw.rect(self.surf,(100,100,100),list(map(int,(self.s[0]/2-25,self.s[1]/2-25,50,50))),0)
-        pygame.draw.rect(self.surf,(255,0,0),list(map(int,(self.s[0]/2-50,self.s[1]/2-50,100,20))),0)
+        pygame.draw.rect(self.surf, (100, 100, 100), list(map(int, (self.s[0]/2 - 25, self.s[1]/2 - 25, 50, 50))), 0)
+        pygame.draw.rect(self.surf, (255, 0, 0), list(map(int, (self.s[0]/2 - 50, self.s[1]/2 - 50, 100, 20))), 0)
 
         if self.health > 0:
-            pygame.draw.rect(self.surf,(0,255,0),list(map(int,(self.s[0]/2-50,self.s[1]/2-50,100*(self.health/self.maxhealth),20))),0)
+            pygame.draw.rect(self.surf, (0, 255, 0), list(map(int, (self.s[0]/2 - 50, self.s[1]/2 - 50, 100 * (self.health/self.maxhealth), 20))), 0)
 
-        pygame.draw.circle(self.surf,(244,194,44),[int(i/2) for i in self.s],20,0)
-        pygame.draw.circle(self.surf,(255,164,44),[int(i/2) for i in self.s],18,0)
-        pygame.draw.circle(self.surf,(255,100,44),[int(i/2) for i in self.s],15,0)
-        pygame.draw.circle(self.surf,(255,0,0),[int(i/2) for i in self.s],13,0)
+        pygame.draw.circle(self.surf, (244, 194, 44), [int(i/2) for i in self.s], 20, 0)
+        pygame.draw.circle(self.surf, (255, 164, 44), [int(i/2) for i in self.s], 18, 0)
+        pygame.draw.circle(self.surf, (255, 100, 44), [int(i/2) for i in self.s], 15, 0)
+        pygame.draw.circle(self.surf, (255, 0, 0), [int(i/2) for i in self.s], 13, 0)
 
         # Bullets
         for bullet in self.bullets:
@@ -211,9 +211,9 @@ class Turret:
             
         # Turret barrel
         quadrant = 1 if self.s[0]/2 <= pygame.mouse.get_pos()[0] <= self.s[0] and self.s[1]/2 <= pygame.mouse.get_pos()[1] <= self.s[1] else (2 if 0 <= pygame.mouse.get_pos()[0] <= self.s[0]/2 and self.s[1]/2 <= pygame.mouse.get_pos()[1] <= self.s[1] else (3 if pygame.mouse.get_pos()[0] <= self.s[0]/2 and 0 <= pygame.mouse.get_pos()[1] <= self.s[1]/2 else 0))
-        angle = (180/math.pi)*math.acos(abs(pygame.mouse.get_pos()[0]-(self.s[0]/2))/math.sqrt(((pygame.mouse.get_pos()[0]-(self.s[0]/2))**2)+((pygame.mouse.get_pos()[1]-(self.s[1]/2)))**2))+(quadrant*90)
-        self.barrel.draw(self.surf,90 + (90-angle if not quadrant % 2 else angle))
+        angle = (180/math.pi) * math.acos(abs(pygame.mouse.get_pos()[0] - (self.s[0]/2))/math.sqrt(((pygame.mouse.get_pos()[0] - (self.s[0]/2))**2) + ((pygame.mouse.get_pos()[1] - (self.s[1]/2)))**2)) + (quadrant*90)
+        self.barrel.draw(self.surf, 90 + (90-angle if not quadrant % 2 else angle))
 
     def clean(self):
         # Deletes any bullets if they are outside playable area
-        self.bullets = [i for i in self.bullets if not any(e < 0 or e > self.s[p] for p,e in enumerate(i.pos))]
+        self.bullets = [i for i in self.bullets if not any(e < 0 or e > self.s[p] for p, e in enumerate(i.pos))]
