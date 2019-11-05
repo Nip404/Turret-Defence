@@ -1,7 +1,7 @@
 import time
 
 class Timer:
-    def __init__(self,ability=0,cooldown=0):
+    def __init__(self, ability=0, cooldown=0):
 
         # Ability and cooldown time durations
         self.ability = ability
@@ -15,7 +15,7 @@ class Timer:
     # Timer handler
     def update(self):
         if not self.period == "waiting":
-            self.time = int(time.time()-self.t0)
+            self.time = int(time.time() - self.t0)
 
             if self.time >= self.ability and self.period == "ability":
                 self.period = "cooldown"
