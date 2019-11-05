@@ -1,6 +1,9 @@
 # Turret-Defence
 A turret based game in Python 3.x using the Pygame library.
 
+# NOTE:
+- Logos 4-10 are missing, so the game will not work until they're replaced.
+
 # How to play
 The game revolves around a single turret in the middle of a field.\
 To earn money and score points, click around the turret to shoot bullets.\
